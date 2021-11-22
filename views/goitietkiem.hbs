@@ -74,7 +74,7 @@
             </div>
             <div class="item">
                 <li>
-                    <div class="slider-info banner-view banner-top3 bg bg2">
+                    <div class="slider-info banner-view  banner-top3 bg bg2">
                         <div class="banner-info">
                             <div class="container">
                                 <div class="row">
@@ -113,7 +113,7 @@
                             <h4>Safety</h4>
                         </div>
                     </div>
-                    <p class="mt-4">Chúng tôi đảm bảo việc gửi/nhận tiền tiết kiệm của website là vô cùng an toàn.</p>
+                    <p class="mt-4">Chúng tôi đảm bảo mọi giao dịch của website là vô cùng an toàn.</p>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 mt-md-0 mt-4">
@@ -141,7 +141,7 @@
                             <h4>Reputation</h4>
                         </div>
                     </div>
-                    <p class="mt-4"></p>
+                    <p class="mt-4">Website cung cấp các dịch vụ với độ tin cậy cao nhất thị trường</p>
                 </div>
             </div>
         </div>
@@ -158,7 +158,7 @@
                     <p class="mt-md-4 mt-3">Website được tạo ra trong hình dịch COVID-19 diễn ra vô 
                         cùng phức tạp. Hầu hết các dịch vụ đều chuyển đổi số như học tập, thanh toán hóa đơn,
                         mua hàng qua mạng,.. và đăc biệt là gửi tiền tiết kiệm online</p>
-                    <a class="btn btn-style btn-primary mt-sm-5 mt-4 mr-2" href="#"> Learn More</a>
+                    <a class="btn btn-style btn-primary mt-sm-5 mt-4 mr-2" href="#"> Đọc thêm</a>
                 </div>
                 <div class="col-lg-5">
                     <div class="position-relative">
@@ -181,8 +181,7 @@
                     <div class="row mobile-right-grids mb-lg-5 mb-4">
                         <div class="col-10 mobile-right-info">
                             <h6><a href="#url">An toàn</a></h6>
-                            <p>Tất cả giao dịch đều có thể thực hiện online, vì vậy bạn không phải lo lắng phải
-                                ra ngoài trong tình hình dịch bệnh phức tạp.
+                            <p>Tất cả giao dịch đều online đảm bảo an toàn mùa dịch.
                             </p>
                         </div>
                         <div class="col-2 mobile-right-icon">
@@ -193,8 +192,8 @@
                     </div>
                     <div class="row mobile-right-grids mb-lg-5 mb-4">
                         <div class="col-10 mobile-right-info">
-                            <h6><a href="#url">24/7 and anywhere</a></h6>
-                            <p>Bạn có thể thực hiện giao dịch ở bất cứ lúc nào, bất cứ đâu, miễn là có internet</p>
+                            <h6><a href="#url">Cộng đồng đông đảo</a></h6>
+                            <p>Cộng đồng đông đảo mọi vấn đề dễ dàng được giải quyết.</p>
                         </div>
                         <div class="col-2 mobile-right-icon">
                             <div class="mobile-icon">
@@ -271,10 +270,10 @@
             <div class="text-center">
                 <p>{{message}}</p>
                 {{#if isAdmin}}
-                <a href="/GoiTietKiem/Them" class="btn btn-primary text-center">Thêm gói</a>                                
+                <a href="/GoiTietKiem/Them" class="btn btn-primary text-center btn-custom">Thêm gói</a>                                
                 {{/if}}
             </div>   
-            <div class="row mt-lg-5 mt-4">
+            <div class="row mt-lg-5 mt-4 ">
                 {{#each goitietkiem}}
                 <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
                     <div class="grids5-info">
@@ -286,11 +285,11 @@
                             <p class="date"><span class="fa fa-calendar mr-2"></span>Đến ngày: {{this.NgayKetThuc}}</p>
                             <p>Ưu đãi: {{this.UuDai}}</p>
                             <p>Lãi suất: {{this.LaiSuat}}</p>
-                            <div class="text-center">
-                                <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="btn btn-primary">Mở gói ngay</a>
+                            <div class="text-center ">
+                                <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="btn btn-primary btn-custom">Mở gói ngay</a>
                                 {{#if ../isAdmin}}              
-                                <a href="/GoiTietKiem/Sua/{{this._id}}" class="btn btn-primary">Sửa</a>
-                                <a href="/GoiTietKiem/Xoa/{{this._id}}" class="btn btn-primary">Xóa</a>                  
+                                <a href="/GoiTietKiem/Sua/{{this._id}}" class="btn btn-primary btn-custom">Sửa</a>
+                                <a href="/GoiTietKiem/Xoa/{{this._id}}" class="btn btn-primary btn-custom">Xóa</a>                  
                                 {{/if}}   
                             </div>
                                                     

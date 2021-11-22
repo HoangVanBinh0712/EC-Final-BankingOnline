@@ -1,19 +1,26 @@
-<p>{{message}}</p>
-<p>Số người sử dụng dịch vụ: {{people}}</p>
-{{#each taikhoan}}
-<div class="row">
-    <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title"><a href="/TaiKhoan/XemTatCaNguoiDung/{{this.user}}"class="btn btn-primary">{{this.TenTK}}</a></h5>
-                <p class="card-text"> {{this.email}}</p>
-                <p class="card-text"> {{this.CCCD}}</p>
-                <p class="card-text"> {{this.NgaySinh}}</p>
-                <p class="card-text"> {{this.SoDu}}</p>
-                <p class="card-text">{{this.STK}} </p>
-                <p class="card-text"> {{this.createdAt}}</p>
+<div class="w3l-news" id="news">
+  <section id="grids5-block" class="py-5">
+    <div class="container py-lg-5 py-md-4 py-2">
+      <p>{{message}}</p>
+      <p>Số người sử dụng dịch vụ: {{people}}</p>
+      <div class="row mt-lg-5 mt-4">
+        {{#each taikhoan}}
+          <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
+            <div class="grids5-info">
+              <h5 class="card-title"><a
+                  href="/TaiKhoan/XemTatCaNguoiDung/{{this.user}}"
+                  class="btn btn-primary"
+                >{{this.TenTK}}</a></h5>
+              <p class="card-text"> {{this.email}}</p>
+              <p class="card-text"> {{this.CCCD}}</p>
+              <p class="card-text"> {{this.NgaySinh}}</p>
+              <p class="card-text"> {{this.SoDu}}</p>
+              <p class="card-text">{{this.STK}} </p>
+              <p class="card-text"> {{this.createdAt}}</p>
             </div>
-        </div>
+          </div>
+        {{/each}}
+      </div>
     </div>
+  </section>
 </div>
-{{/each}}
