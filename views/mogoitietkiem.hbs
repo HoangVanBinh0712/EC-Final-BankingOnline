@@ -1,0 +1,33 @@
+<form method="post" action="/GoiTietKiem/MoGoi">
+    <p>{{message}}</p>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Tên sổ: </label>
+        <input type="text" class="form-control" id="TenSo" name="TenSo">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Số tiền gửi: </label>
+        <input type="text" class="form-control" id="SoTienGui" name="SoTienGui">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Thời Hạn: {{goitietkiem.ThoiHan}}</label>
+        <input type="hidden" name="ThoiHan" value="{{goitietkiem.ThoiHan}}">
+
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Lãi Suất: {{goitietkiem.LaiSuat}}</label>
+        <input type="hidden" name="LaiSuat" value="{{goitietkiem.LaiSuat}}">
+
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Ngày Gửi: {{NgayGui}}</label>
+        <input type="hidden" name="NgayGui" value="{{NgayGui}}">
+
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Ngày Hết Hạn: {{NgayHetHan}}</label>
+        <input type="hidden" name="NgayHetHan" value="{{NgayHetHan}}">
+
+    </div>
+    <input type="hidden" name="GoiTietKiemId" value="{{goitietkiem._id}}">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

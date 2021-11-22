@@ -1,0 +1,19 @@
+<p>{{message}}</p>
+<p>Số người sử dụng dịch vụ: {{people}}</p>
+{{#each taikhoan}}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><a href="/TaiKhoan/XemTatCaNguoiDung/{{this.user}}"class="btn btn-primary">{{this.TenTK}}</a></h5>
+                <p class="card-text"> {{this.email}}</p>
+                <p class="card-text"> {{this.CCCD}}</p>
+                <p class="card-text"> {{this.NgaySinh}}</p>
+                <p class="card-text"> {{this.SoDu}}</p>
+                <p class="card-text">{{this.STK}} </p>
+                <p class="card-text"> {{this.createdAt}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{{/each}}

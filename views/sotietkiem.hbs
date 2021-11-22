@@ -1,0 +1,16 @@
+<p>{{message}}</p>
+{{#each sotietkiem}}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{this.TenSo}}</h5>
+                <p class="card-text"> {{this.SoTienGui}}</p>
+                <p class="card-text"> {{this.ThoiHan}}</p>
+                <p class="card-text">{{this.LaiSuat}} </p>
+                <a href="/SoTietKiem/{{this._id}}" class="btn btn-primary">Chi Tiết</a>
+            </div>
+        </div>
+    </div>
+</div>
+{{/each}}

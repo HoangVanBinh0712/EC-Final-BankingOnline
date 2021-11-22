@@ -1,0 +1,25 @@
+<p>Người dùng: {{nguoidung}}</p>
+<p>Số lượng sổ: {{soluong}}</p>
+
+{{#if sotietkiem}}
+{{#each sotietkiem}}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{this.TenSo}}</h5>
+                <p class="card-text"> {{this.STK}}</p>
+                <p class="card-text"> {{this.CCCD}}</p>
+                <p class="card-text"> {{this.SoTienGui}}</p>
+                <p class="card-text"> {{this.ThoiHan}}</p>
+                <p class="card-text">{{this.LaiSuat}} </p>
+                <p class="card-text"> {{this.NgayGui}}</p>
+                <p class="card-text">{{this.NgayHetHan}} </p>
+            </div>
+        </div>
+    </div>
+</div>
+{{/each}}
+{{else}}
+<p> Người dùng {{nguoidung}} chưa có sổ tiết kiệm nào !</p>
+{{/if}}
