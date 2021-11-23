@@ -280,9 +280,9 @@
                          <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="d-block zoom"><img src="/img/goitk.jpg" alt=""
                                 class="img-fluid news-image" /></a>
                             <h4><a href="/GoiTietKiem/MoGoi/{{this._id}}">{{this.TenGoi}}</a></h4>
-                            <p>{{this.NgayDienRa}}</p>
-                            <p class="date"><span class="fa fa-calendar mr-2"></span>Bắt đầu từ: {{this.NgayDienRa}}</p>
-                            <p class="date"><span class="fa fa-calendar mr-2"></span>Đến ngày: {{this.NgayKetThuc}}</p>
+                            <p>{{dateFormat this.NgayDienRa "DD / MM / YYYY" }}</p>
+                            <p class="date"><span class="fa fa-calendar mr-2"></span>Bắt đầu từ: {{dateFormat this.NgayDienRa "DD / MM / YYYY" }}</p>
+                            <p class="date"><span class="fa fa-calendar mr-2"></span>Đến ngày: {{dateFormat this.NgayKetThuc "DD / MM / YYYY" }}</p>
                             <p>Ưu đãi: {{this.UuDai}}</p>
                             <p>Lãi suất: {{this.LaiSuat}}</p>
                             <div class="text-center ">

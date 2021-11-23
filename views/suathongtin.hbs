@@ -16,8 +16,8 @@
 
     </div>
     <div class="form-group">
-        <label for="exampleInputEmail1">Ngày Sinh: {{taikhoan.NgaySinh}}</label>
-        <input type="date" class="form-control"name="NgaySinh" value="{{taikhoan.NgaySinh}}">
+        <label for="exampleInputEmail1">Ngày Sinh:  {{dateFormat taikhoan.NgaySinh "DD / MM / YYYY" }}</label>
+        <input type="date" class="form-control"name="NgaySinh" value="{{dateFormat taikhoan.NgaySinh "DD / MM / YYYY" }}">
 
     </div>
     <div class="form-group">

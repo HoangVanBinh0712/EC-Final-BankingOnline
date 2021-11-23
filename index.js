@@ -14,6 +14,9 @@ const bp = require('body-parser')
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
 
+const handlebars = require('handlebars')
+handlebars.registerHelper('dateFormat', require('handlebars-dateformat'))
+
 app.use(session({
 	secret: 'djhxcvxfgshajfgjhgsjhfgsakjeauytsdfy',
 	resave: false,
@@ -44,7 +47,16 @@ app.set('view engine', 'hbs')
 app.set('views','views')
 app.set('views', path.join(__dirname, 'views/'));
 app.use(express.static(path.join(__dirname, 'public')));
-
+//
+const controller = require('./controllers/controller')
+const cron = require('node-cron')
+cron.schedule('0 0 * * * *', () => {
+	controller.tangtien()
+	controller.updategoitietkiem()
+	controller.daohan()
+	console.log('Job Done');
+  });
+//
 route(app)
 
 app.listen(port, () => {

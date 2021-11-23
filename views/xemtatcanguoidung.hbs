@@ -13,10 +13,10 @@
                 >{{this.TenTK}}</a></h5>
               <p class="card-text"> {{this.email}}</p>
               <p class="card-text"> {{this.CCCD}}</p>
-              <p class="card-text"> {{this.NgaySinh}}</p>
+              <p class="card-text"> {{dateFormat this.NgaySinh "DD / MM / YYYY" }}</p>
               <p class="card-text"> {{this.SoDu}}</p>
               <p class="card-text">{{this.STK}} </p>
-              <p class="card-text"> {{this.createdAt}}</p>
+              <p class="card-text"> {{dateFormat this.createdAt "DD / MM / YYYY" }}</p>
             </div>
           </div>
         {{/each}}

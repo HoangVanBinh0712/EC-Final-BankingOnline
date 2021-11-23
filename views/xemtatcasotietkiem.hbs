@@ -15,8 +15,8 @@
               <p class="card-text"> {{this.SoTienGui}}</p>
               <p class="card-text"> {{this.ThoiHan}}</p>
               <p class="card-text">{{this.LaiSuat}} </p>
-              <p class="card-text"> {{this.NgayGui}}</p>
-              <p class="card-text">{{this.NgayHetHan}} </p>
+              <p class="card-text">  {{dateFormat this.NgayGui "DD / MM / YYYY" }}</p>
+              <p class="card-text"> {{dateFormat this.NgayHetHan "DD / MM / YYYY" }} </p>
               <p class="card-text">UserId: {{this.user}} </p>
             </div>
           </div>

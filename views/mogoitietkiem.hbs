@@ -21,12 +21,12 @@
 
     </div>
     <div class="form-group">
-        <label for="exampleInputEmail1">Ngày Gửi: {{NgayGui}}</label>
+        <label for="exampleInputEmail1">Ngày Gửi: {{dateFormat NgayGui "DD / MM / YYYY" }}</label>
         <input type="hidden" name="NgayGui" value="{{NgayGui}}">
 
     </div>
     <div class="form-group">
-        <label for="exampleInputEmail1">Ngày Hết Hạn: {{NgayHetHan}}</label>
+        <label for="exampleInputEmail1">Ngày Hết Hạn:  {{dateFormat NgayHetHan "DD / MM / YYYY" }}</label>
         <input type="hidden" name="NgayHetHan" value="{{NgayHetHan}}">
 
     </div>
