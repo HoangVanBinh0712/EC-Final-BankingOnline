@@ -8,7 +8,6 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const TaiKhoan = require('../models/TaiKhoan')
 const cookies = require('../middleware/cookies')
-const { search } = require('../route/news')
 
 class Controller {
 
