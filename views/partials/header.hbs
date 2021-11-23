@@ -14,10 +14,14 @@
           </nav>
       </div>
       <li class="nav-item dropdown">
+        {{#if username}}
            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false" style="color: white;">
           {{username}}
         </a>
+        {{else}}
+         <a class="nav-link" href="/Login" style="color: white;">Login</a>
+        {{/if}}
         <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
            <li><a class="dropdown-item" href="/TaiKhoan">Tài Khoản</a></li>
            <li><a class="dropdown-item" href="/NapTien">Nạp Tiền</a></li>
@@ -55,8 +59,8 @@
       </div>
     </li>
     {{/if}}
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <form class="form-inline my-2 my-lg-0" method="get" action="/GoiTietKiem">
+        <input class="form-control mr-sm-2" type="Search" name="Search" id="Search"  placeholder="Search" aria-label="Search" value="{{Search}}">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>
 </nav>

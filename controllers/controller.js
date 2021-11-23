@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const TaiKhoan = require('../models/TaiKhoan')
 const cookies = require('../middleware/cookies')
+const { search } = require('../route/news')
 
 class Controller {
 
@@ -176,7 +177,44 @@ class Controller {
                 })
             })
     }
-
+    async searchgtk(req, res) {
+        try {
+            const { Search } = req.query
+            const username = cookies.get(req, 'getUsername')
+            const role = cookies.get(req, "role")
+            var isAdmin = false
+            if (role >= 1)
+                isAdmin = true
+            GoiTietKiem.find({ ThoiHan: { $regex: Search } })
+                .then(goitietkiem => {
+                    res.render("goitietkiem", {
+                        goitietkiem: multipleMongooseToObject(goitietkiem), username: username,
+                        soluong: goitietkiem.length,Search: Search, isAdmin: isAdmin, message: req.flash('message')
+                    })
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async searchstk(req, res) {
+        try {
+            const { Search } = req.query
+            const username = cookies.get(req, 'getUsername')
+            const role = cookies.get(req, "role")
+            var isAdmin = false
+            if (role >= 1)
+                isAdmin = true
+            SoTietKiem.find({ user: req.userId, TenSo: { $regex: Search } })
+                .then(sotietkiem => {
+                    res.render("sotietkiem", {
+                        sotietkiem: multipleMongooseToObject(sotietkiem), username: username,
+                        soluong: sotietkiem.length,Search: Search, isAdmin: isAdmin, message: req.flash('message')
+                    })
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
     async mogoi(req, res) {
         if (req.method == 'GET') {
             var username = cookies.get(req, 'getUsername')
@@ -796,55 +834,114 @@ class Controller {
     }
     //admin 
     async xemtatcanguoidung(req, res) {
-        const role = cookies.get(req, "role")
-        var isAdmin = false
-        if (role >= 1)
-            isAdmin = true
-        try {
-            var user = await User.findById({ _id: req.userId })
-            if (user.role < 1) //common user
-            {
-                req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
-                return res.redirect('/')
+        if (req.method == 'GET') {
+            const role = cookies.get(req, "role")
+            var isAdmin = false
+            if (role >= 1)
+                isAdmin = true
+            try {
+                var user = await User.findById({ _id: req.userId })
+                if (user.role < 1) //common user
+                {
+                    req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
+                    return res.redirect('/')
+                }
+                var username = cookies.get(req, 'getUsername')
+                await TaiKhoan.find()
+                    .then(taikhoan => {
+                        return res.render('xemtatcanguoidung', { taikhoan: multipleMongooseToObject(taikhoan),  isAdmin: isAdmin, people: taikhoan.length, username: username })
+                    })
+            } catch (error) {
+                console.log(error)
+                req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
+                res.redirect('/')
             }
-            var username = cookies.get(req, 'getUsername')
-            await TaiKhoan.find()
-                .then(taikhoan => {
-                    return res.render('xemtatcanguoidung', { taikhoan: multipleMongooseToObject(taikhoan), isAdmin: isAdmin, people: taikhoan.length, username: username })
-                })
-        } catch (error) {
-            console.log(error)
-            req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
-            res.redirect('/')
+        } else {
+            const { Search } = req.body
+            if (Search.length == 0)
+                return res.redirect('/TaiKhoan/XemTatCaNguoiDung')
+
+            const role = cookies.get(req, "role")
+            var isAdmin = false
+            if (role >= 1)
+                isAdmin = true
+            try {
+                var user = await User.findById({ _id: req.userId })
+                if (user.role < 1) //common user
+                {
+                    req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
+                    return res.redirect('/')
+                }
+                var username = cookies.get(req, 'getUsername')
+                await TaiKhoan.find({ TenTK: { $regex: Search } })
+                    .then(taikhoan => {
+                        return res.render('xemtatcanguoidung', { taikhoan: multipleMongooseToObject(taikhoan),Search: Search, isAdmin: isAdmin, username: username })
+                    })
+            } catch (error) {
+                console.log(error)
+                req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
+                res.redirect('/')
+            }
+
+
         }
     }
     async xemtatcaso(req, res) {
-        const role = cookies.get(req, "role")
-        var isAdmin = false
-        if (role >= 1)
-            isAdmin = true
-        try {
-            var user = await User.findById({ _id: req.userId })
-            if (user.role < 1) //common user
-            {
-                req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
-                return res.redirect('/')
-            }
-            var username = cookies.get(req, 'getUsername')
-            await SoTietKiem.find()
-                .then(sotietkiem => {
-                    var tongtien = 0
-                    sotietkiem.forEach(stk => {
-                        tongtien += stk.SoTienGui
+        if (req.method == 'GET') {
+            const role = cookies.get(req, "role")
+            var isAdmin = false
+            if (role >= 1)
+                isAdmin = true
+            try {
+                var user = await User.findById({ _id: req.userId })
+                if (user.role < 1) //common user
+                {
+                    req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
+                    return res.redirect('/')
+                }
+                var username = cookies.get(req, 'getUsername')
+                await SoTietKiem.find()
+                    .then(sotietkiem => {
+                        var tongtien = 0
+                        sotietkiem.forEach(stk => {
+                            tongtien += stk.SoTienGui
+                        })
+                        return res.render('xemtatcasotietkiem', { sotietkiem: multipleMongooseToObject(sotietkiem), soluong: sotietkiem.length, isAdmin: isAdmin, tongtien: tongtien, soluong: sotietkiem.length, username: username })
                     })
-                    return res.render('xemtatcasotietkiem', { sotietkiem: multipleMongooseToObject(sotietkiem), soluong: sotietkiem.length, isAdmin: isAdmin, tongtien: tongtien, soluong: sotietkiem.length, username: username })
-                })
-        } catch (error) {
-            console.log(error)
-            req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
-            res.redirect('/')
+            } catch (error) {
+                console.log(error)
+                req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
+                res.redirect('/')
+            }
+        }
+        else {
+            const role = cookies.get(req, "role")
+            var isAdmin = false
+            if (role >= 1)
+                isAdmin = true
+            try {
+                const { Search } = req.body
+                if (Search.length == 0)
+                    return res.redirect('/SoTietKiem/TatCaSo')
+                var user = await User.findById({ _id: req.userId })
+                if (user.role < 1) //common user
+                {
+                    req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
+                    return res.redirect('/')
+                }
+                var username = cookies.get(req, 'getUsername')
+                await SoTietKiem.find({ TenSo: { $regex: Search } })
+                    .then(sotietkiem => {
+                        return res.render('xemtatcasotietkiem', { sotietkiem: multipleMongooseToObject(sotietkiem),Search: Search, isAdmin: isAdmin, soluong: sotietkiem.length, username: username })
+                    })
+            } catch (error) {
+                console.log(error)
+                req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
+                res.redirect('/')
+            }
         }
     }
+
     async xemsotietkiemnguoidung(req, res) {
         const role = cookies.get(req, "role")
         var isAdmin = false

@@ -26,5 +26,8 @@
     "mongoose": "^6.0.12",
     "node-cron": "^3.0.0",
     "req-flash": "^0.0.3"
+  },
+  "engines": {
+    "node":"16.13.0"
   }
 }

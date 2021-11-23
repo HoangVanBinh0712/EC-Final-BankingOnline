@@ -5,7 +5,7 @@ var session = require('express-session');
 var flash = require('req-flash');
 const path = require('path')
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 const mongoose = require('mongoose');
 require('dotenv').config()
 const cookieParser = require("cookie-parser");

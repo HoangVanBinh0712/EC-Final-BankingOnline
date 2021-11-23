@@ -21,10 +21,14 @@ router.get('/GoiTietKiem/Sua/:_id', verify, Controller.suagoi)//admin
 router.post('/GoiTietKiem/Sua/:_id', verify, Controller.suagoi)//admin
 
 router.get('/GoiTietKiem/Xoa/:_id', verify, Controller.xoagoi)//admin
+///
+router.get('/GoiTietKiem?', Controller.searchgtk)//admin
 
+router.post('/SoTietKiem/TatCaSo',verify, controller.xemtatcaso)//admin
 router.get('/SoTietKiem/TatCaSo',verify, controller.xemtatcaso)//admin
 router.get('/SoTietKiem/HuyGoi/:_id', verify, Controller.huygoi)//Xóa sổ tiết kiệm rút tiền
 router.get('/SoTietKiem/:_id', verify, Controller.xemchitietso)
+router.get('/SoTietKiemSearch?',verify, Controller.searchstk)//admin
 router.get('/SoTietKiem', verify, Controller.xemso)
 //usser
 router.post('/TaiKhoan/DoiMatKhau', verify, Controller.doimatkhau)//Sửa thông tin
@@ -33,6 +37,7 @@ router.post('/TaiKhoan/TaoThongTin', verify, Controller.taothongtin)//Sửa thô
 //admin
 router.get('/TaiKhoan/XemTatCaNguoiDung/:_id', verify, Controller.xemsotietkiemnguoidung)//admin
 router.get('/TaiKhoan/XemTatCaNguoiDung', verify, Controller.xemtatcanguoidung)//admin
+router.post('/TaiKhoan/XemTatCaNguoiDung', verify, Controller.xemtatcanguoidung)//admin
 
 router.post('/TaiKhoan/ChinhSua', verify, Controller.suathongtin)//Sửa thông tin
 router.get('/TaiKhoan/ChinhSua', verify, Controller.suathongtin)
