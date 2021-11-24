@@ -124,7 +124,8 @@ function route(app) {
     //
     app.post('/RutTien', verify, async (req, res) => {
         const value = (parseFloat(req.body.SoTienRut) / 23300).toFixed(2).toString()
-        const email = await TaiKhoan.findOne({ user: req.userId })
+        const taikhoan = await TaiKhoan.findOne({ user: req.userId })
+        var email = req.body.email || taikhoan.email
         var sender_batch_id = Math.random().toString(36).substring(9);
         var create_payout_json = {
             "sender_batch_header": {
@@ -138,7 +139,7 @@ function route(app) {
                         "value": value,
                         "currency": "USD"
                     },
-                    "receiver": email.email.toString(),
+                    "receiver": email.toString(),
                     "note": "Thank you.",
                     "sender_item_id": "item_3"
                 }
