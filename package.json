@@ -18,16 +18,20 @@
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^10.0.0",
+    "ejs": "^2.6.1",
     "express": "^4.17.1",
     "express-handlebars": "^5.1.0",
     "express-session": "^1.17.2",
+    "fs": "^0.0.1-security",
     "handlebars-dateformat": "^1.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
     "node-cron": "^3.0.0",
+    "path": "^0.12.7",
+    "paypal-rest-sdk": "^1.8.1",
     "req-flash": "^0.0.3"
   },
   "engines": {
-    "node":"16.13.0"
+    "node": "16.13.0"
   }
 }

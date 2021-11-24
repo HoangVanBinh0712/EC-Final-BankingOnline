@@ -43,12 +43,13 @@ router.post('/TaiKhoan/ChinhSua', verify, Controller.suathongtin)//Sửa thông 
 router.get('/TaiKhoan/ChinhSua', verify, Controller.suathongtin)
 router.get('/TaiKhoan', verify, Controller.xemthongtin)//Xem thông tin
 
-
-router.post('/NapTien',verify, Controller.naptien)
+//router.post('/NapTien',verify, Controller.naptien)
 router.get('/NapTien',verify ,Controller.naptien)
 
-router.post('/RutTien',verify, Controller.ruttien)
 router.get('/RutTien',verify ,Controller.ruttien)
+
+router.get('/LichSuNapRut',verify,Controller.lichsunaprut)
+router.get('/LichSuGuiTietKiem',verify,Controller.lichsuguitietkiem)
 
 router.get('/', Controller.index)
 

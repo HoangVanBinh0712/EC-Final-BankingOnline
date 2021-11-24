@@ -8,35 +8,23 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const TaiKhoan = require('../models/TaiKhoan')
 const cookies = require('../middleware/cookies')
+const LichSuGuiTietKiem = require('../models/LichSuGuiTietKiem')
 
 class Controller {
 
     async tangtien() {
         try {
-            var tonglai = 0
             const laikhongkyhan = await GoiTietKiem.findOne({ TenGoi: "Không Kỳ Hạn" }, 'LaiSuat')
             var taikhoan = await TaiKhoan.find()
             taikhoan.forEach(async (element) => {
-                if (element.STK != "31410003435176") {
-                    var lai = (parseFloat(element.SoDu) * (parseFloat(laikhongkyhan.LaiSuat) / 360)).toFixed(4)
-                    console.log(element.SoDu, ":", lai)
-                    tonglai = (parseFloat(tonglai) + parseFloat(lai)).toFixed(4)
-                    element.SoDu = (parseFloat(element.SoDu) + parseFloat(lai)).toFixed(4)
-                    await TaiKhoan.findOneAndUpdate({ _id: element._id },
-                        element,
-                        { new: true })
-                }
+                var lai = (parseFloat(element.SoDu) * (parseFloat(laikhongkyhan.LaiSuat) / 360)).toFixed(4)
+                console.log(element.SoDu, ":", lai)
+                element.SoDu = (parseFloat(element.SoDu) + parseFloat(lai)).toFixed(4)
+                await TaiKhoan.findOneAndUpdate({ _id: element._id },
+                    element,
+                    { new: true })
             })
             //trừ tiền thủ quỹ
-            var treasurer = await TaiKhoan.findOne({ STK: "31410003435176" })
-            console.log(tonglai)
-            treasurer.SoDu = (treasurer.SoDu - parseFloat(tonglai)).toFixed(4)
-            const treasurer_id = { _id: treasurer._id }
-            treasurer = await TaiKhoan.findOneAndUpdate(
-                treasurer_id,
-                treasurer,
-                { new: true }
-            )
         } catch (error) {
             console.log(error)
         }
@@ -145,17 +133,7 @@ class Controller {
                         user: element.user, GoiTietKiem: element.GoiTietKiem
                     }
                     await SoTietKiem.findByIdAndUpdate(element._id, sotietkiem, { new: true })
-                    var treasurer = await TaiKhoan.findOne({ STK: "31410003435176" })
-                    treasurer.SoDu = (treasurer.SoDu - parseFloat(element.SoTienGui * element.LaiSuat)).toFixed(4)
-                    const treasurer_id = { _id: treasurer._id }
-                    await TaiKhoan.findOneAndUpdate(
-                        treasurer_id,
-                        treasurer,
-                        { new: true }
-                    )
-                    //
                     console.log("đáo hạn")
-
                 }
             })
         } catch (error) {
@@ -188,7 +166,7 @@ class Controller {
                 .then(goitietkiem => {
                     res.render("goitietkiem", {
                         goitietkiem: multipleMongooseToObject(goitietkiem), username: username,
-                        soluong: goitietkiem.length,Search: Search, isAdmin: isAdmin, message: req.flash('message')
+                        soluong: goitietkiem.length, Search: Search, isAdmin: isAdmin, message: req.flash('message')
                     })
                 })
         } catch (error) {
@@ -207,7 +185,7 @@ class Controller {
                 .then(sotietkiem => {
                     res.render("sotietkiem", {
                         sotietkiem: multipleMongooseToObject(sotietkiem), username: username,
-                        soluong: sotietkiem.length,Search: Search, isAdmin: isAdmin, message: req.flash('message')
+                        soluong: sotietkiem.length, Search: Search, isAdmin: isAdmin, message: req.flash('message')
                     })
                 })
         } catch (error) {
@@ -263,6 +241,7 @@ class Controller {
                     req.flash('message', 'Số dư không đủ!');
                     return res.redirect(`/GoiTietKiem/MoGoi/${req.body.GoiTietKiemId}`)
                 }
+                //all good
                 const STK = taikhoan.STK
                 const CCCD = taikhoan.CCCD
                 let sotietkiem = new SoTietKiem({
@@ -270,21 +249,20 @@ class Controller {
                     user: req.userId, GoiTietKiem: req.body.GoiTietKiemId
                 })
                 await sotietkiem.save()
-                var treasurer = await TaiKhoan.findOne({ STK: "31410003435176" })
+                //Tạo lịch sử
+                const Ten = "Mở Gói"
+                const SoTien = SoTienGui
+                let lichsugui = new LichSuGuiTietKiem({
+                    Ten, TenSo, SoTien, user: req.userId
+                })
+                await lichsugui.save()
+                //Trừ tiền đang có trong tài khoản
                 taikhoan.SoDu = (taikhoan.SoDu - parseFloat(SoTienGui)).toFixed(4)
-                treasurer.SoDu = (treasurer.SoDu - parseFloat(SoTienGui)).toFixed(4)
                 const SoTietKiemUpdateCondition = { _id: taikhoan._id, user: req.userId }
-                taikhoan = await TaiKhoan.findOneAndUpdate(
+                await TaiKhoan.findOneAndUpdate(
                     SoTietKiemUpdateCondition,
                     taikhoan,
-                    { new: true }
-                )
-                const treasurer_id = { _id: treasurer._id }
-                treasurer = await TaiKhoan.findOneAndUpdate(
-                    treasurer_id,
-                    treasurer,
-                    { new: true }
-                )
+                    { new: true })
                 req.flash('message', `Mở gói thành công. Tổng gửi ${SoTienGui} VNĐ`);
                 res.redirect('/SoTietKiem')
             } catch (error) {
@@ -526,30 +504,22 @@ class Controller {
                     tienlai = songay * 0.005 * sotietkiem.SoTienGui / 360
                 }
                 //Đúng thời hạn
-                if (sotietkiem.NgayHetHan.getFullYear() == now.getFullYear()
-                    && sotietkiem.NgayHetHan.getMonth() == now.getMonth()
-                    && sotietkiem.NgayHetHan.getDate() == now.getDate()) {
+                if (sotietkiem.NgayHetHan.getFullYear() <= now.getFullYear()
+                    && sotietkiem.NgayHetHan.getMonth() <= now.getMonth()
+                    && sotietkiem.NgayHetHan.getDate() <= now.getDate()) {
                     tienlai = sotietkiem.LaiSuat * sotietkiem.SoTienGui
                 }
                 let taikhoan = await TaiKhoan.findOne({ user: req.userId })
                 const sotien = taikhoan.SoDu
                 try {
                     //Tính lãi: 
-                    taikhoan.SoDu = taikhoan.SoDu + tienlai + sotietkiem.SoTienGui
-                    var treasurer = await TaiKhoan.findOne({ STK: "31410003435176" })
-                    treasurer.SoDu = treasurer.SoDu - (tienlai + sotietkiem.SoTienGui)
+                    taikhoan.SoDu = (taikhoan.SoDu + tienlai + sotietkiem.SoTienGui).toFixed(4)
                     // All good
                     const TaiKhoanUpdateCondition = { _id: taikhoan._id, user: req.userId }
                     taikhoan = await TaiKhoan.findOneAndUpdate(
                         TaiKhoanUpdateCondition,
                         taikhoan,
                         { new: true })
-                    const treasurer_id = { _id: treasurer._id }
-                    treasurer = await TaiKhoan.findOneAndUpdate(
-                        treasurer_id,
-                        treasurer,
-                        { new: true }
-                    )
                     //Chuyen xong roi xoa so tiet kiem
                     const deletedSoTietKiem = await SoTietKiem.findOneAndDelete(SoTietKiemDeleteCondition)
                     if (!deletedSoTietKiem) {
@@ -563,10 +533,19 @@ class Controller {
                         req.flash('message', 'Có lỗi xảy ra khi xóa sổ tiết kiệm, vui lòng đăng nhập lại để xác thực')
                         return res.redirect('/login')
                     }
-                    req.flash('message', `Hủy gói thành công. Nhận ${tienlai + sotietkiem.SoTienGui} VNĐ`);
+                    //Tạo lịch sử
+                    const Ten = "Hủy Gói"
+                    const SoTien = (tienlai + sotietkiem.SoTienGui).toFixed(4)
+                    const TenSo = sotietkiem.TenSo
+                    let lichsugui = new LichSuGuiTietKiem({
+                        Ten, TenSo, SoTien, user: req.userId
+                    })
+                    await lichsugui.save()
+                    req.flash('message', `Hủy gói thành công. Nhận ${(tienlai + sotietkiem.SoTienGui).toFixed(4)} VNĐ`);
                     res.redirect('/TaiKhoan')
-                } catch
+                } catch(error)
                 {
+                    console.log(error)
                     taikhoan.SoDu = sotien
                     const TaiKhoanUpdateCondition = { _id: taikhoan._id, user: req.userId }
                     taikhoan = await TaiKhoan.findOneAndUpdate(
@@ -739,7 +718,6 @@ class Controller {
                 }
                 res.clearCookie(process.env.NAME_TOKEN_SECRET);
                 req.flash('message', 'Đổi mật khẩu thành công')
-                console.log('oday')
                 return res.redirect('/login')
 
             } catch (error) {
@@ -760,7 +738,7 @@ class Controller {
             var username = cookies.get(req, 'getUsername')
             await TaiKhoan.findOne({ user: req.userId })
                 .then(taikhoan => {
-                    res.render('naptien', { taikhoan: mongoosetoObject(taikhoan), username: username, isAdmin: isAdmin })
+                    res.render('naptien', { taikhoan: mongoosetoObject(taikhoan), username: username, isAdmin: isAdmin, message: req.flash('message') })
                 })
         } else {
             const { SoTienNap } = req.body
@@ -787,18 +765,6 @@ class Controller {
                 .then(taikhoan => {
                     res.render('ruttien', { taikhoan: mongoosetoObject(taikhoan), username: username, isAdmin: isAdmin })
                 })
-        } else {
-            const { SoTienRut } = req.body
-            var taikhoan = await TaiKhoan.findOne({ user: req.userId })
-            taikhoan.SoDu = (parseFloat(taikhoan.SoDu) - parseFloat(SoTienRut)).toFixed(4)
-            taikhoan = await TaiKhoan.findOneAndUpdate({ user: req.userId }, taikhoan, { new: true })
-            if (!taikhoan) {
-                res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                req.flash('message', 'Có lỗi xảy ra, vui lòng đăng nhập lại để xác thực ')
-                return res.redirect('/login')
-            }
-            req.flash('message', `Rút ${SoTienRut} VNĐ thanh công!`);
-            return res.redirect('/TaiKhoan')
         }
     }
     async register(req, res) {
@@ -848,7 +814,7 @@ class Controller {
                 var username = cookies.get(req, 'getUsername')
                 await TaiKhoan.find()
                     .then(taikhoan => {
-                        return res.render('xemtatcanguoidung', { taikhoan: multipleMongooseToObject(taikhoan),  isAdmin: isAdmin, people: taikhoan.length, username: username })
+                        return res.render('xemtatcanguoidung', { taikhoan: multipleMongooseToObject(taikhoan), isAdmin: isAdmin, people: taikhoan.length, username: username })
                     })
             } catch (error) {
                 console.log(error)
@@ -874,7 +840,7 @@ class Controller {
                 var username = cookies.get(req, 'getUsername')
                 await TaiKhoan.find({ TenTK: { $regex: Search } })
                     .then(taikhoan => {
-                        return res.render('xemtatcanguoidung', { taikhoan: multipleMongooseToObject(taikhoan),Search: Search, isAdmin: isAdmin, username: username })
+                        return res.render('xemtatcanguoidung', { taikhoan: multipleMongooseToObject(taikhoan), Search: Search, isAdmin: isAdmin, username: username })
                     })
             } catch (error) {
                 console.log(error)
@@ -931,7 +897,7 @@ class Controller {
                 var username = cookies.get(req, 'getUsername')
                 await SoTietKiem.find({ TenSo: { $regex: Search } })
                     .then(sotietkiem => {
-                        return res.render('xemtatcasotietkiem', { sotietkiem: multipleMongooseToObject(sotietkiem),Search: Search, isAdmin: isAdmin, soluong: sotietkiem.length, username: username })
+                        return res.render('xemtatcasotietkiem', { sotietkiem: multipleMongooseToObject(sotietkiem), Search: Search, isAdmin: isAdmin, soluong: sotietkiem.length, username: username })
                     })
             } catch (error) {
                 console.log(error)
@@ -967,6 +933,32 @@ class Controller {
             req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
             res.redirect('/')
         }
+    }
+
+    //
+    async lichsunaprut(req,res){
+        const LichSuNapRut = require('../models/LichSuNapRut')
+        const role = cookies.get(req, "role")
+        var isAdmin = false
+        if (role >= 1)
+            isAdmin = true
+        var username = cookies.get(req, 'getUsername')
+        await LichSuNapRut.find({ user: req.userId })
+            .then(lichsunaprut => {
+                res.render('lichsunaprut', { lichsunaprut: multipleMongooseToObject(lichsunaprut), isAdmin: isAdmin, username: username, message: req.flash('message') })
+            })
+    }
+    async lichsuguitietkiem(req,res){
+        const LichSuGuiTietKiem = require('../models/LichSuGuiTietKiem')
+        const role = cookies.get(req, "role")
+        var isAdmin = false
+        if (role >= 1)
+            isAdmin = true
+        var username = cookies.get(req, 'getUsername')
+        await LichSuGuiTietKiem.find({ user: req.userId })
+            .then(lichsuguitietkiem => {
+                res.render('lichsuguitietkiem', { lichsuguitietkiem: multipleMongooseToObject(lichsuguitietkiem), isAdmin: isAdmin, username: username, message: req.flash('message') })
+            })
     }
 }
 

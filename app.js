@@ -21,8 +21,9 @@ app.use(session({
 	secret: 'djhxcvxfgshajfgjhgsjhfgsakjeauytsdfy',
 	resave: false,
 	saveUninitialized: true
-	}));
-	app.use(flash());
+}));
+app.use(flash());
+
 const connectDB = async () => {
 	try {
 		await mongoose.connect(
@@ -41,24 +42,24 @@ const connectDB = async () => {
 }
 connectDB()
 app.engine('hbs', exphbs(
-    {extname: ".hbs"} 
-  ));
+	{ extname: ".hbs" }
+));
 app.set('view engine', 'hbs')
-app.set('views','views')
+app.set('views', 'views')
 app.set('views', path.join(__dirname, 'views/'));
 app.use(express.static(path.join(__dirname, 'public')));
 //
 const controller = require('./controllers/controller')
 const cron = require('node-cron')
-cron.schedule('0 0 * * * *', () => {
+cron.schedule('0 0 18 * * *', () => {
 	controller.tangtien()
 	controller.updategoitietkiem()
 	controller.daohan()
 	console.log('Job Done');
-  });
+});
 //
 route(app)
 
 app.listen(port, () => {
-    console.log(`app listening at http://localhost:${port}`)
-  })
+	console.log(`app listening at http://localhost:${port}`)
+})
