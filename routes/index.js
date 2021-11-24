@@ -20,15 +20,17 @@ function route(app) {
             "quantity": 1
         }]
         var amount = (parseFloat(req.body.SoTienNap) / tygia).toFixed(2).toString()
-
+        var fullUrl = req.protocol + '://' + req.get('host');
+        const return_url = (fullUrl+'/success').toString()
+        const cancel_url = (fullUrl + '/cancel').toString()
         const create_payment_json = {
             "intent": "sale",
             "payer": {
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": "http://localhost:3000/success",
-                "cancel_url": "http://localhost:3000/cancel"
+                "return_url": return_url,
+                "cancel_url": cancel_url
             },
             "transactions": [{
                 "item_list": {
