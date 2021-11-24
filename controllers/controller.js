@@ -2,7 +2,6 @@ const GoiTietKiem = require('../models/GoiTietKiem')
 const SoTietKiem = require('../models/SoTietKiem')
 const { multipleMongooseToObject, mongoosetoObject } = require('../util/mongoose')
 const GoiTietKiemMacDinh = require('../models/GoiTietKiemMacDinh')
-
 const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
@@ -148,9 +147,11 @@ class Controller {
             isAdmin = true
         GoiTietKiem.find()
             .then(goitietkiem => {
+                var message = req.session.message
+                delete req.session.message
                 res.render("goitietkiem", {
                     goitietkiem: multipleMongooseToObject(goitietkiem), username: username,
-                    soluong: goitietkiem.length, isAdmin: isAdmin, message: req.flash('message')
+                    soluong: goitietkiem.length, isAdmin: isAdmin, message: message
                 })
             })
     }
@@ -164,9 +165,11 @@ class Controller {
                 isAdmin = true
             GoiTietKiem.find({ ThoiHan: { $regex: Search } })
                 .then(goitietkiem => {
+                    var message = req.session.message
+                    delete req.session.message
                     res.render("goitietkiem", {
                         goitietkiem: multipleMongooseToObject(goitietkiem), username: username,
-                        soluong: goitietkiem.length, Search: Search, isAdmin: isAdmin, message: req.flash('message')
+                        soluong: goitietkiem.length, Search: Search, isAdmin: isAdmin, message: message
                     })
                 })
         } catch (error) {
@@ -183,9 +186,11 @@ class Controller {
                 isAdmin = true
             SoTietKiem.find({ user: req.userId, TenSo: { $regex: Search } })
                 .then(sotietkiem => {
+                    var message = req.session.message
+                    delete req.session.message
                     res.render("sotietkiem", {
                         sotietkiem: multipleMongooseToObject(sotietkiem), username: username,
-                        soluong: sotietkiem.length, Search: Search, isAdmin: isAdmin, message: req.flash('message')
+                        soluong: sotietkiem.length, Search: Search, isAdmin: isAdmin, message: message
                     })
                 })
         } catch (error) {
@@ -201,8 +206,14 @@ class Controller {
                 isAdmin = true
             await TaiKhoan.findOne({ user: req.userId })
                 .then(taikhoan => {
-                    if (!taikhoan)
-                        return res.render('taothongtin', { message: "Hãy điền đầy đủ thông tin để được sử dụng dịch vụ ", isAdmin: isAdmin, username: username })
+                    if (!taikhoan) {
+                        const message = {
+                            type: 'success',
+                            intro: 'Hãy điền đầy đủ thông tin để được sử dụng dịch vụ! ',
+                            message: ''
+                        }
+                        return res.render('taothongtin', { message: message, isAdmin: isAdmin, username: username })
+                    }
                 })
             var goitietkiem = await GoiTietKiem.findById({ _id: req.params._id })
             var ThoiHan = goitietkiem.ThoiHan
@@ -224,21 +235,31 @@ class Controller {
                     year += howlong
                     NgayHetHan.setFullYear(year)
                 }
+            var message = req.session.message
+            delete req.session.message
             res.render('mogoitietkiem', {
                 goitietkiem: mongoosetoObject(goitietkiem), NgayGui: NgayGui, NgayHetHan: NgayHetHan,
-                username: username, isAdmin: isAdmin, message: req.flash('message')
+                username: username, isAdmin: isAdmin, message: message
             })
         } else {
             const { TenSo, SoTienGui, ThoiHan, LaiSuat, NgayGui, NgayHetHan } = req.body
             if (!TenSo || !SoTienGui) {
-                req.flash('message', 'Vui lòng điền đầy đủ thông tin!');
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Thiếu Thông Tin !',
+                    message: 'Vui lòng điền đầy đủ thông tin .'
+                }
                 return res.redirect(`/GoiTietKiem/MoGoi/${req.body.GoiTietKiemId}`)
             }
             try {
                 const SoTienDaoHan = 0
                 var taikhoan = await TaiKhoan.findOne({ user: req.userId })
                 if (taikhoan.SoDu < SoTienGui) {
-                    req.flash('message', 'Số dư không đủ!');
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Số dư không đủ !',
+                        message: ''
+                    }
                     return res.redirect(`/GoiTietKiem/MoGoi/${req.body.GoiTietKiemId}`)
                 }
                 //all good
@@ -263,12 +284,20 @@ class Controller {
                     SoTietKiemUpdateCondition,
                     taikhoan,
                     { new: true })
-                req.flash('message', `Mở gói thành công. Tổng gửi ${SoTienGui} VNĐ`);
+                req.session.message = {
+                    type: 'success',
+                    intro: 'Mở gói thành công. ',
+                    message: `Tổng gửi ${SoTienGui} VNĐ`
+                }
                 res.redirect('/SoTietKiem')
             } catch (error) {
                 console.log(error)
                 res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                req.flash('message', 'Có lỗi trong hệ thống vui lòng đăng nhập lại')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Có lỗi trong hệ thống! ',
+                    message: 'Vui lòng đăng nhập lại.'
+                }
                 res.redirect('/login')
             }
         }
@@ -277,15 +306,23 @@ class Controller {
     async themgoi(req, res) {
         const role = cookies.get(req, "role")
         var isAdmin = false
+        var username = cookies.get(req, 'getUsername')
         if (role >= 1)
             isAdmin = true
-        if (req.method == 'GET')
-            return res.render('themgoi', { isAdmin: isAdmin, message: req.flash('message') })
+        if (req.method == 'GET') {
+            var message = req.session.message
+            delete req.session.message
+            return res.render('themgoi', { isAdmin: isAdmin, message: message, username: username })
+        }
         var { TenGoi, ThoiHan, UuDai, LaiSuat, NgayDienRa, NgayKetThuc } = req.body
         NgayDienRa = new Date(NgayDienRa)
         NgayKetThuc = new Date(NgayKetThuc)
         if (!TenGoi || !ThoiHan || !LaiSuat || !NgayDienRa || !NgayKetThuc) {
-            req.flash('message', 'Vui lòng điền đầy đủ thông tin ')
+            req.session.message = {
+                type: 'danger',
+                intro: 'Thiếu Thông Tin !  ',
+                message: 'Vui lòng điền đầy đủ thông tin. '
+            }
             res.redirect(req.originalUrl)
         }
 
@@ -295,7 +332,11 @@ class Controller {
             const user = await User.findById({ _id: req.userId })
             if (user && user.role == 0) {
                 res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                req.flash('message', 'Không có quyền thêm vui lòng đăng nhập lại')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Không có quyền thêm gói tiết kiệm !  ',
+                    message: 'Vui lòng đăng nhập lại. '
+                }
                 return res.redirect('/login')
             }
             const goitietkiem = new GoiTietKiem({
@@ -306,11 +347,19 @@ class Controller {
             })
             await goitietkiem.save()
             await goitietkiemmacdinh.save()
-            req.flash('message', 'Thêm gói thành công')
+            req.session.message = {
+                type: 'success',
+                intro: 'Thêm gói thành công !  ',
+                message: ' '
+            }
             res.redirect('/')
         } catch (error) {
             console.log(error)
-            req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
+            req.session.message = {
+                type: 'danger',
+                intro: 'Có lỗi xảy ra !  ',
+                message: 'Vui lòng thử lại. '
+            }
             res.redirect('/')
         }
     }
@@ -321,20 +370,30 @@ class Controller {
             isAdmin = true
         try {
             if (req.method == 'GET') {
+                var message = req.session.message
+                delete req.session.message
                 var goitietkiem = await GoiTietKiem.findById({ _id: req.params._id })
-                return res.render('suagoi', { goitietkiem: mongoosetoObject(goitietkiem), isAdmin: isAdmin, message: req.flash('message') })
+                return res.render('suagoi', { goitietkiem: mongoosetoObject(goitietkiem), isAdmin: isAdmin, message: message })
             }
             const { TenGoi, ThoiHan, UuDai, LaiSuat, NgayDienRa, NgayKetThuc } = req.body
 
             // Simple validation
             if (!TenGoi || !ThoiHan || !LaiSuat) {
-                req.flash('message', 'Vui lòng điền đầy đủ thông tin')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Thiếu Thông Tin !  ',
+                    message: 'Vui lòng điền đầy đủ thông tin. '
+                }
                 return res.redirect(req.originalUrl)
             }
             const user = await User.findById({ _id: req.userId })
             if (user && user.role == 0) {
                 res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                req.flash('message', 'Không có quyền sửa. vui lòng đăng nhập lại')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Không có quyền sửa gói tiết kiệm !  ',
+                    message: 'Vui lòng đăng nhập lại. '
+                }
                 return res.redirect('/login')
             }
             let updatedGoiTietKiem
@@ -372,14 +431,27 @@ class Controller {
 
             // User not authorised to update post or post not found
             if (!updatedGoiTietKiem || !updatedGoiTietKiemMacDinh) {
-                req.flash('message', 'Không tìm thấy gói tiết kiệm hoặc chưa xác thực')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Không tìm thấy gói tiết kiệm hoặc chưa xác thực!  ',
+                    message: ''
+                }
                 return res.redirect(req.originalUrl)
             }
-            req.flash('message', 'Sửa thành công!')
+            req.session.message = {
+                type: 'success',
+                intro: 'Sửa thành công ! ',
+                message: ' '
+            }
             res.redirect('/')
         } catch (error) {
             console.log(error)
-            res.status(500).json({ success: false, message: 'Internal server error' })
+            req.session.message = {
+                type: 'danger',
+                intro: 'Có lỗi trong hệ thống !  ',
+                message: 'Vui lòng thử lại.'
+            }
+            res.redirect('/')
         }
     }
     async xoagoi(req, res) {
@@ -387,7 +459,11 @@ class Controller {
             const user = await User.findById({ _id: req.userId })
             if (user && user.role == 0) {
                 res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                req.flash('message', 'Không có quyền xóa. vui lòng đăng nhập lại')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Không có quyền xóa gói tiết kiệm ! ',
+                    message: 'Vui lòng đăng nhập lại.'
+                }
                 return res.redirect('/login')
             }
             const deletedGoiTietKem = await GoiTietKiem.findOneAndDelete({ _id: req.params._id })
@@ -403,26 +479,44 @@ class Controller {
 
             // User not authorised or post not found
             if (!deletedGoiTietKem || !deletedGoiTietKemMacDinh) {
-                req.flash('message', 'Không tìm thấy gói hoặc chưa xác thực')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Không tìm thấy gói hoặc chưa xác thực ! ',
+                    message: ''
+                }
                 return res.redirect('/')
             }
 
-            req.flash('message', 'Xóa thành công !')
+            req.session.message = {
+                type: 'success',
+                intro: 'Xóa thành công ! ',
+                message: ' '
+            }
             return res.redirect('/')
         } catch (error) {
             console.log(error)
-            req.flash('message', 'Có lỗi xảy ra khi xóa !')
+            req.session.message = {
+                type: 'danger',
+                intro: 'Có lỗi trong hệ thống !  ',
+                message: 'Vui lòng thử lại.'
+            }
             return res.redirect('/')
         }
     }
     async login(req, res) {
         if (req.method == 'GET') {
-            return res.render('login', { message: req.flash('message') })
+            var message = req.session.message
+            delete req.session.message
+            return res.render('login', { message: message })
         }
         var { username, password } = req.body
         // Simple validation
         if (!username || !password) {
-            req.flash('message', 'Thiếu thông tin tài khoản hoặc mật khẩu')
+            req.session.message = {
+                type: 'danger',
+                intro: 'Tài Khoản Hoặc Mật Khẩu Trống! ',
+                message: 'Vui lòng điền đầy đủ thông tin .'
+            }
             return res.redirect('/login')
         }
 
@@ -430,14 +524,22 @@ class Controller {
             // Check for existing user
             const user = await User.findOne({ username })
             if (!user) {
-                req.flash('message', 'Sai tài khoản hoặc mật khẩu')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Sai Tài Khoản Hoặc Mật Khẩu ! ',
+                    message: 'Vui lòng thử lại .'
+                }
                 return res.redirect('/login')
             }
 
             // Username found
             const passwordValid = await argon2.verify(user.password, password)
             if (!passwordValid) {
-                req.flash('message', 'Sai tài khoản hoặc mật khẩu')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Sai Tài Khoản Hoặc Mật Khẩu ! ',
+                    message: 'Vui lòng thử lại .'
+                }
                 return res.redirect('/login')
             }
 
@@ -456,7 +558,11 @@ class Controller {
         } catch (error) {
             console.log(error)
             res.clearCookie(process.env.NAME_TOKEN_SECRET);
-            req.flash('message', 'Có lỗi xảy ra. Vui lòng đăng nhập lại')
+            req.session.message = {
+                type: 'danger',
+                intro: 'Có lỗi trong hệ thống ! ',
+                message: 'Vui lòng thử lại .'
+            }
             return res.redirect('/login')
         }
     }
@@ -468,7 +574,9 @@ class Controller {
         var username = cookies.get(req, 'getUsername')
         await SoTietKiem.find({ user: req.userId })
             .then(sotietkiem => {
-                res.render('sotietkiem', { sotietkiem: multipleMongooseToObject(sotietkiem), isAdmin: isAdmin, username: username, message: req.flash('message') })
+                var message = req.session.message
+                delete req.session.message
+                res.render('sotietkiem', { sotietkiem: multipleMongooseToObject(sotietkiem), isAdmin: isAdmin, username: username, message: message })
             })
     }
     async xemchitietso(req, res) {
@@ -530,7 +638,11 @@ class Controller {
                             taikhoan,
                             { new: true })
                         res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                        req.flash('message', 'Có lỗi xảy ra khi xóa sổ tiết kiệm, vui lòng đăng nhập lại để xác thực')
+                        req.session.message = {
+                            type: 'danger',
+                            intro: 'Có lỗi xảy ra khi xóa sổ tiết kiệm ! ',
+                            message: 'Vui lòng đăng nhập lại để xác thực .'
+                        }
                         return res.redirect('/login')
                     }
                     //Tạo lịch sử
@@ -541,10 +653,13 @@ class Controller {
                         Ten, TenSo, SoTien, user: req.userId
                     })
                     await lichsugui.save()
-                    req.flash('message', `Hủy gói thành công. Nhận ${(tienlai + sotietkiem.SoTienGui).toFixed(4)} VNĐ`);
+                    req.session.message = {
+                        type: 'success',
+                        intro: 'Hủy gói thành công ! ',
+                        message: `Nhận ${(tienlai + sotietkiem.SoTienGui).toFixed(4)} VNĐ`
+                    }
                     res.redirect('/TaiKhoan')
-                } catch(error)
-                {
+                } catch (error) {
                     console.log(error)
                     taikhoan.SoDu = sotien
                     const TaiKhoanUpdateCondition = { _id: taikhoan._id, user: req.userId }
@@ -553,14 +668,22 @@ class Controller {
                         taikhoan,
                         { new: true })
                     res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                    req.flash('message', 'Có lỗi xảy ra khi xóa sổ tiết kiệm, vui lòng đăng nhập lại để xác thực')
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Có lỗi xảy ra khi xóa sổ tiết kiệm ! ',
+                        message: 'Vui lòng đăng nhập lại để xác thực .'
+                    }
                     return res.redirect('/login')
                 }
             }
         } catch (error) {
             console.log(error)
             res.clearCookie(process.env.NAME_TOKEN_SECRET);
-            req.flash('message', 'Có lỗi xảy ra khi xóa sổ tiết kiệm, vui lòng đăng nhập lại để xác thực')
+            req.session.message = {
+                type: 'danger',
+                intro: 'Có lỗi xảy ra khi xóa sổ tiết kiệm ! ',
+                message: 'Vui lòng đăng nhập lại để xác thực .'
+            }
             return res.redirect('/login')
         }
     }
@@ -579,9 +702,17 @@ class Controller {
             })
         await TaiKhoan.findOne({ user: req.userId })
             .then(taikhoan => {
-                if (!taikhoan)
-                    return res.render('taothongtin', { message: "Hãy điền đầy đủ thông tin để được sử dụng dịch vụ ", isAdmin: isAdmin, username: username })
-                return res.render('xemthongtin', { taikhoan: mongoosetoObject(taikhoan), sotien: tienguitietkiem + taikhoan.SoDu, isAdmin: isAdmin, username: username, message: req.flash('message') })
+                if (!taikhoan) {
+                    const message = {
+                        type: 'success',
+                        intro: 'Hãy điền đầy đủ thông tin để được sử dụng dịch vụ! ',
+                        message: ''
+                    }
+                    return res.render('taothongtin', { message: message, isAdmin: isAdmin, username: username })
+                }
+                var message = req.session.message
+                delete req.session.message
+                return res.render('xemthongtin', { taikhoan: mongoosetoObject(taikhoan), sotien: tienguitietkiem + taikhoan.SoDu, isAdmin: isAdmin, username: username, message: message })
             })
     }
     async suathongtin(req, res) {
@@ -593,13 +724,19 @@ class Controller {
             var username = cookies.get(req, 'getUsername')
             await TaiKhoan.findOne({ user: req.userId })
                 .then(taikhoan => {
-                    return res.render('suathongtin', { taikhoan: mongoosetoObject(taikhoan), isAdmin: isAdmin, username: username, message: req.flash('message') })
+                    var message = req.session.message
+                    delete req.session.message
+                    return res.render('suathongtin', { taikhoan: mongoosetoObject(taikhoan), isAdmin: isAdmin, username: username, message: message })
                 })
         }
         else {
             const { TenTK, email, CCCD, NgaySinh, SoDU, STK, createdAt } = req.body
             if (!TenTK || !email || !CCCD || !NgaySinh) {
-                req.flash('message', 'Vui lòng điền đầy đủ thông tin!');
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Thiếu Thông Tin ! ',
+                    message: 'Vui lòng điền đầy đủ thông tin .'
+                }
                 return res.redirect('/TaiKhoan/ChinhSua')
             }
             try {
@@ -620,16 +757,28 @@ class Controller {
                 // User not authorised to update post or post not found
                 if (!updatedTaiKhoan) {
                     res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                    req.flash('message', 'Không tìm thấy tài khoản hoặc chưa đươc xác thực. Vui lòng đăng nhập lại ')
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Không tìm thấy tài khoản hoặc chưa đươc xác thực ! ',
+                        message: 'Vui lòng đăng nhập lại để xác thực .'
+                    }
                     return res.redirect('/login')
                 }
-                req.flash('message', 'Sửa thông tin thành công!');
+                req.session.message = {
+                    type: 'success',
+                    intro: 'Sửa thông tin thành công !',
+                    message: ''
+                }
                 res.redirect('/TaiKhoan')
             } catch (error) {
                 console.log(error)
                 res.clearCookie(process.env.NAME_TOKEN_SECRET);
                 res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                req.flash('message', 'Có lỗi xảy ra, vui lòng đăng nhập lại để xác thực ')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Có lỗi trong hệ thống ! ',
+                    message: 'Vui lòng đăng nhập lại để xác thực .'
+                }
                 return res.redirect('/login')
             }
         }
@@ -642,7 +791,12 @@ class Controller {
         var { TenTK, email, NgaySinh, CCCD, STK } = req.body
         // Simple validation
         if (!TenTK || !email || !NgaySinh || !CCCD || !STK) {
-            return res.render('taothongtin', { message: "Thiếu thông tin", isAdmin: isAdmin })
+            const message = {
+                type: 'danger',
+                intro: 'Thiếu thông tin ! ',
+                message: 'Vui lòng điền đẩy đủ thông tin .'
+            }
+            return res.render('taothongtin', { message: message, isAdmin: isAdmin })
         }
         try {
             const SoDu = 0
@@ -669,16 +823,29 @@ class Controller {
                 })
 
                 await taikhoan.save()
-                req.flash('message', 'Tạo thông tin thành công!');
+                req.session.message = {
+                    type: 'success',
+                    intro: 'Tạo thông tin thành công !',
+                    message: ''
+                }
                 res.redirect('/TaiKhoan')
             }
             else {
-                return res.render('taothongtin', { message: "STK hoặc CCCD đã được sử dụng", isAdmin: isAdmin })
+                const message = {
+                    type: 'danger',
+                    intro: 'STK hoặc CCCD đã được sử dụng ! ',
+                    message: 'Vui lòng thử STK hoặc CCCD khác .'
+                }
+                return res.render('taothongtin', { message: message, isAdmin: isAdmin })
             }
         } catch (error) {
             console.log(error)
             res.clearCookie(process.env.NAME_TOKEN_SECRET);
-            req.flash('message', 'Có lỗi xảy ra, vui lòng đăng nhập lại để xác thực ')
+            req.session.message = {
+                type: 'danger',
+                intro: 'Có lỗi trong hệ thống ! ',
+                message: 'Vui lòng đăng nhập lại để xác thực .'
+            }
             return res.redirect('/login')
         }
     }
@@ -695,16 +862,27 @@ class Controller {
         else {
             const { oldpassword, newpassword, confirmnewpassword } = req.body
             // Simple validation
-            if (!oldpassword || !newpassword || !confirmnewpassword || newpassword !== confirmnewpassword)
-                return res.render('doimatkhau', { message: 'Nhập thiếu thông tin', isAdmin: isAdmin })
+            if (!oldpassword || !newpassword || !confirmnewpassword || newpassword !== confirmnewpassword) {
+                const message = {
+                    type: 'danger',
+                    intro: 'Nhập thiếu thông tin ! ',
+                    message: 'Vui lòng điền đầy đủ thông tin .'
+                }
+                return res.render('doimatkhau', { message: message, isAdmin: isAdmin })
+            }
 
             try {
                 // Check for existing user
                 var user = await User.findById(req.userId)
                 const passwordValid = await argon2.verify(user.password, oldpassword)
-                if (!passwordValid)
-                    return res.render('doimatkhau', { message: 'Nhập sai mật khẩu cũ', isAdmin: isAdmin })
-
+                if (!passwordValid) {
+                    const message = {
+                        type: 'danger',
+                        intro: 'Nhập sai mật khẩu cũ ! ',
+                        message: 'Vui lòng thử lại .'
+                    }
+                    return res.render('doimatkhau', { message: message, isAdmin: isAdmin })
+                }
                 //allgood
                 const hashedPassword = await argon2.hash(newpassword)
                 user.password = hashedPassword
@@ -713,17 +891,29 @@ class Controller {
                 user = await User.findOneAndUpdate(userUpdateCondition, user, { new: true })
                 if (!user) {
                     res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                    req.flash('message', 'Có lỗi xảy ra, vui lòng đăng nhập lại để xác thực ')
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Có lỗi trong hệ thống ! ',
+                        message: 'Vui lòng đăng nhập lại để xác thực .'
+                    }
                     return res.redirect('/login')
                 }
                 res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                req.flash('message', 'Đổi mật khẩu thành công')
+                req.session.message = {
+                    type: 'success',
+                    intro: 'Đổi mật khẩu thành công !',
+                    message: ''
+                }
                 return res.redirect('/login')
 
             } catch (error) {
                 console.log(error)
                 res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                req.flash('message', 'Có lỗi xảy ra, vui lòng đăng nhập lại để xác thực ')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Có lỗi trong hệ thống ! ',
+                    message: 'Vui lòng đăng nhập lại để xác thực .'
+                }
                 return res.redirect('/login')
             }
         }
@@ -738,7 +928,9 @@ class Controller {
             var username = cookies.get(req, 'getUsername')
             await TaiKhoan.findOne({ user: req.userId })
                 .then(taikhoan => {
-                    res.render('naptien', { taikhoan: mongoosetoObject(taikhoan), username: username, isAdmin: isAdmin, message: req.flash('message') })
+                    var message = req.session.message
+                    delete req.session.message
+                    res.render('naptien', { taikhoan: mongoosetoObject(taikhoan), username: username, isAdmin: isAdmin, message: message })
                 })
         } else {
             const { SoTienNap } = req.body
@@ -747,10 +939,18 @@ class Controller {
             taikhoan = await TaiKhoan.findOneAndUpdate({ user: req.userId }, taikhoan, { new: true })
             if (!taikhoan) {
                 res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                req.flash('message', 'Có lỗi xảy ra, vui lòng đăng nhập lại để xác thực ')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Có lỗi trong hệ thống ! ',
+                    message: 'Vui lòng đăng nhập lại để xác thực .'
+                }
                 return res.redirect('/login')
             }
-            req.flash('message', `Nạp ${SoTienNap} VNĐ thanh công!`);
+            req.session.message = {
+                type: 'success',
+                intro: `Nạp ${SoTienNap} VNĐ thanh công!`,
+                message: ''
+            }
             return res.redirect('/TaiKhoan')
         }
     }
@@ -763,38 +963,66 @@ class Controller {
             var username = cookies.get(req, 'getUsername')
             await TaiKhoan.findOne({ user: req.userId })
                 .then(taikhoan => {
-                    res.render('ruttien', { taikhoan: mongoosetoObject(taikhoan), username: username, isAdmin: isAdmin })
+                    var message = req.session.message
+                    delete req.session.message
+                    res.render('ruttien', { taikhoan: mongoosetoObject(taikhoan),message:message, username: username, isAdmin: isAdmin })
                 })
         }
     }
     async register(req, res) {
         const { username, password, confirmpassword } = req.body
         // Simple validation
-        if (!username || !password || !confirmpassword || password !== confirmpassword)
-            return res.render('register', { message: 'Missing username and/or password' })
+        if (!username || !password || !confirmpassword || password !== confirmpassword) {
+            const message = {
+                type: 'danger',
+                intro: 'Thiếu Tài Khoản hoặc Mật Khẩu ! ',
+                message: 'Vui lòng điền đầy đủ .'
+            }
+            return res.render('register', { message: message })
+        }
         try {
             // Check for existing user
             const user = await User.findOne({ username })
 
-            if (user)
-                return res.render('register', { message: 'Tên đăng nhập đã được tạo' })
+            if (user) {
+                const message = {
+                    type: 'danger',
+                    intro: 'Tên đăng nhập đã được tạo ! ',
+                    message: 'Vui lòng thử lại .'
+                }
+                return res.render('register', { message: message })
+            }
 
             // All good
             const hashedPassword = await argon2.hash(password)
             const newUser = new User({ username, password: hashedPassword })
             await newUser.save()
-            req.flash('message', 'Tạo tài khoản thành công hãy đăng nhập để sử dụng dịch vụ')
+            console.log(error)
+            res.clearCookie(process.env.NAME_TOKEN_SECRET);
+            req.session.message = {
+                type: 'danger',
+                intro: 'Tạo tài khoản thành công hãy đăng nhập để sử dụng dịch vụ ! ',
+                message: ''
+            }
             return res.redirect('/login')
         } catch (error) {
             console.log(error)
             res.clearCookie(process.env.NAME_TOKEN_SECRET);
-            req.flash('message', 'Có lỗi xảy ra, vui lòng đăng nhập lại để xác thực ')
+            req.session.message = {
+                type: 'danger',
+                intro: 'Có lỗi trong hệ thống ! ',
+                message: 'Vui lòng đăng nhập lại để xác thực .'
+            }
             return res.redirect('/login')
         }
     }
     dangxuat(req, res) {
         res.clearCookie(process.env.NAME_TOKEN_SECRET);
-        req.flash('message', 'Đăng Xuất Thành Công ')
+        req.session.message = {
+            type: 'success',
+            intro: 'Đăng xuất thành công ! ',
+            message: ''
+        }
         return res.redirect('/')
     }
     //admin 
@@ -808,7 +1036,11 @@ class Controller {
                 var user = await User.findById({ _id: req.userId })
                 if (user.role < 1) //common user
                 {
-                    req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Bạn Không có quyền sử dụng chức năng này ! ',
+                        message: ''
+                    }
                     return res.redirect('/')
                 }
                 var username = cookies.get(req, 'getUsername')
@@ -818,7 +1050,11 @@ class Controller {
                     })
             } catch (error) {
                 console.log(error)
-                req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Có lỗi trong hệ thống ! ',
+                    message: 'Vui lòng thử lại .'
+                }
                 res.redirect('/')
             }
         } else {
@@ -834,7 +1070,11 @@ class Controller {
                 var user = await User.findById({ _id: req.userId })
                 if (user.role < 1) //common user
                 {
-                    req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Bạn Không có quyền sử dụng chức năng này ! ',
+                        message: ''
+                    }
                     return res.redirect('/')
                 }
                 var username = cookies.get(req, 'getUsername')
@@ -844,7 +1084,11 @@ class Controller {
                     })
             } catch (error) {
                 console.log(error)
-                req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Có lỗi xảy ra vui lòng thử lại ! ',
+                    message: ''
+                }
                 res.redirect('/')
             }
 
@@ -861,7 +1105,11 @@ class Controller {
                 var user = await User.findById({ _id: req.userId })
                 if (user.role < 1) //common user
                 {
-                    req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Bạn Không có quyền sử dụng chức năng này ! ',
+                        message: ''
+                    }
                     return res.redirect('/')
                 }
                 var username = cookies.get(req, 'getUsername')
@@ -875,7 +1123,11 @@ class Controller {
                     })
             } catch (error) {
                 console.log(error)
-                req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Có lỗi xảy ra vui lòng thử lại ! ',
+                    message: ''
+                }
                 res.redirect('/')
             }
         }
@@ -891,7 +1143,11 @@ class Controller {
                 var user = await User.findById({ _id: req.userId })
                 if (user.role < 1) //common user
                 {
-                    req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Bạn Không có quyền sử dụng chức năng này ! ',
+                        message: ''
+                    }
                     return res.redirect('/')
                 }
                 var username = cookies.get(req, 'getUsername')
@@ -901,7 +1157,11 @@ class Controller {
                     })
             } catch (error) {
                 console.log(error)
-                req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Có lỗi xảy ra vui lòng thử lại ! ',
+                    message: ''
+                }
                 res.redirect('/')
             }
         }
@@ -916,7 +1176,11 @@ class Controller {
             var user = await User.findById({ _id: req.userId })
             if (user.role < 1) //common user
             {
-                req.flash('message', 'Bạn Không có quyền sử dụng chức năng này')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Bạn Không có quyền sử dụng chức năng này ! ',
+                    message: ''
+                }
                 return res.redirect('/')
             }
             var username = cookies.get(req, 'getUsername')
@@ -930,13 +1194,17 @@ class Controller {
 
         } catch (error) {
             console.log(error)
-            req.flash('message', 'Có lỗi xảy ra vui lòng thử lại')
+            req.session.message = {
+                type: 'danger',
+                intro: 'Có lỗi xảy ra vui lòng thử lại ! ',
+                message: ''
+            }
             res.redirect('/')
         }
     }
 
     //
-    async lichsunaprut(req,res){
+    async lichsunaprut(req, res) {
         const LichSuNapRut = require('../models/LichSuNapRut')
         const role = cookies.get(req, "role")
         var isAdmin = false
@@ -945,10 +1213,12 @@ class Controller {
         var username = cookies.get(req, 'getUsername')
         await LichSuNapRut.find({ user: req.userId })
             .then(lichsunaprut => {
-                res.render('lichsunaprut', { lichsunaprut: multipleMongooseToObject(lichsunaprut), isAdmin: isAdmin, username: username, message: req.flash('message') })
+                var message = req.session.message
+                delete req.session.message
+                res.render('lichsunaprut', { lichsunaprut: multipleMongooseToObject(lichsunaprut), isAdmin: isAdmin, username: username, message: message })
             })
     }
-    async lichsuguitietkiem(req,res){
+    async lichsuguitietkiem(req, res) {
         const LichSuGuiTietKiem = require('../models/LichSuGuiTietKiem')
         const role = cookies.get(req, "role")
         var isAdmin = false
@@ -957,7 +1227,9 @@ class Controller {
         var username = cookies.get(req, 'getUsername')
         await LichSuGuiTietKiem.find({ user: req.userId })
             .then(lichsuguitietkiem => {
-                res.render('lichsuguitietkiem', { lichsuguitietkiem: multipleMongooseToObject(lichsuguitietkiem), isAdmin: isAdmin, username: username, message: req.flash('message') })
+                var message = req.session.message
+                delete req.session.message
+                res.render('lichsuguitietkiem', { lichsuguitietkiem: multipleMongooseToObject(lichsuguitietkiem), isAdmin: isAdmin, username: username, message: message })
             })
     }
 }

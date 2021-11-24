@@ -6,7 +6,12 @@
           aria-label="Search" value="{{Search}}">
         <button class="button" type="submit">Search</button>
       </form>
-      <p>{{message}}</p>
+      {{#if message}}
+      <div style="text-align: center" class="alert alert-{{message.type}}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>{{message.intro}}</strong> {{message.message}}
+      </div>
+      {{/if}}
       {{#if sotietkiem}}
       <div class="row mt-lg-5 mt-4">
         {{#each sotietkiem}}

@@ -1,32 +1,37 @@
 <div class="khongduocxoa"></div>
 <form method="post" action="/GoiTietKiem/Them">
-    <p>{{message}}</p>
+    {{#if message}}
+    <div style="text-align: center" class="alert alert-{{message.type}}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>{{message.intro}}</strong> {{message.message}}
+    </div>
+    {{/if}}
     <div class="form-group">
         <label for="exampleInputEmail1">Tên Gói: </label>
         <input type="text" class="form-control" id="TenGoi" name="TenGoi" minlength="2" required>
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Thời Hạn: </label>
-        <input type="text" class="form-control"name="ThoiHan" minlength="5" required>
+        <input type="text" class="form-control" name="ThoiHan" minlength="5" required>
 
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Ưu Đãi: </label>
-        <input type="text" class="form-control" id="UuDai" name="UuDai" >
+        <input type="text" class="form-control" id="UuDai" name="UuDai">
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Lãi Suất: </label>
-        <input type="text" class="form-control"name="LaiSuat" required>
+        <input type="text" class="form-control" name="LaiSuat" required>
 
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Ngày Diễn Ra:</label>
-        <input type="date" class="form-control"name="NgayDienRa" required>
+        <input type="date" class="form-control" name="NgayDienRa" required>
 
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Ngày Kết Thúc: </label>
-        <input type="date" class="form-control"name="NgayKetThuc" required>
+        <input type="date" class="form-control" name="NgayKetThuc" required>
 
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>

@@ -3,18 +3,23 @@
     <div class="col-sm-6">
         <div class="card">
             <div class="card-body">
-                <p>{{message}}</p>
+
                 <p>Tông số tiền đang có: {{sotien}}</p>
                 <h5 class="card-title">{{taikhoan.TenTK}}</h5>
                 <p class="card-text"> {{taikhoan.email}}</p>
                 <p class="card-text"> {{taikhoan.CCCD}}</p>
-                <p class="card-text">  {{dateFormat taikhoan.NgaySinh "DD / MM / YYYY" }}</p>
+                <p class="card-text"> {{dateFormat taikhoan.NgaySinh "DD / MM / YYYY" }}</p>
                 <p class="card-text"> {{taikhoan.SoDu}}</p>
                 <p class="card-text">{{taikhoan.STK}} </p>
                 <p class="card-text"> {{dateFormat taikhoan.createdAt "DD / MM / YYYY" }}</p>
                 <a href="/TaiKhoan/ChinhSua" class="btn btn-primary">Chỉnh sửa thông tin </a>
                 <a href="/TaiKhoan/DoiMatKhau" class="btn btn-primary">Đổi mật khẩu </a>
-
+                {{#if message}}
+                <div style="text-align: center" class="alert alert-{{message.type}}">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>{{message.intro}}</strong> {{message.message}}
+                </div>
+                {{/if}}
             </div>
         </div>
     </div>

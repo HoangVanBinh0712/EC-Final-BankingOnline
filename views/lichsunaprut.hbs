@@ -1,7 +1,12 @@
 <div class="w3l-news" id="news">
   <section id="grids5-block" class="py-5">
     <div class="container py-lg-5 py-md-4 py-2">
-      <p>{{message}}</p>
+      {{#if message}}
+      <div style="text-align: center" class="alert alert-{{message.type}}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>{{message.intro}}</strong> {{message.message}}
+      </div>
+      {{/if}}
       {{#if lichsunaprut}}
       <div class="row mt-lg-5 mt-4">
         {{#each lichsunaprut}}
@@ -11,7 +16,7 @@
               <h5 class="card-title">{{this.Ten}}</h5>
               <p class="card-text"> {{this.paymentId}}</p>
               <p class="card-text"> {{this.SoTien}}</p>
-              <p class="card-text">{{dateFormat this.Ngay "DD / MM / YYYY" }}  </p>
+              <p class="card-text">{{dateFormat this.Ngay "DD / MM / YYYY" }} </p>
             </div>
           </div>
         </div>

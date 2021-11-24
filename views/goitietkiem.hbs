@@ -269,7 +269,12 @@
             <h3 class="title-big text-center">Các gói tiết kiệm</h3>
             <h5 class="text-center">Số lượng gói đang có: {{soluong}}</h5>
             <div class="text-center">
-                <p>{{message}}</p>
+                {{#if message}}
+                <div style="text-align: center" class="alert alert-{{message.type}}">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>{{message.intro}}</strong> {{message.message}}
+                </div>
+                {{/if}}
                 {{#if isAdmin}}
                 <a href="/GoiTietKiem/Them" class="btn btn-primary text-center btn-custom">Thêm gói</a>
                 {{/if}}

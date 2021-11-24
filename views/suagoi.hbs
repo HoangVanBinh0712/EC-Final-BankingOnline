@@ -1,14 +1,20 @@
 <div class="khongduocxoa"></div>
 
 <form method="post" action="/GoiTietKiem/Sua/{{goitietkiem._id}}">
-    <p>{{message}}</p>
+    {{#if message}}
+    <div style="text-align: center" class="alert alert-{{message.type}}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>{{message.intro}}</strong> {{message.message}}
+    </div>
+    {{/if}}
     <div class="form-group">
         <label for="exampleInputEmail1">Tên Gói: </label>
-        <input type="text" class="form-control" id="TenGoi" name="TenGoi" minlength="2" required value="{{goitietkiem.TenGoi}}">
+        <input type="text" class="form-control" id="TenGoi" name="TenGoi" minlength="2" required
+            value="{{goitietkiem.TenGoi}}">
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Thời Hạn: </label>
-        <input type="text" class="form-control"name="ThoiHan" minlength="5" required value="{{goitietkiem.ThoiHan}}">
+        <input type="text" class="form-control" name="ThoiHan" minlength="5" required value="{{goitietkiem.ThoiHan}}">
 
     </div>
     <div class="form-group">
@@ -17,17 +23,17 @@
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Lãi Suất: </label>
-        <input type="text" class="form-control"name="LaiSuat" required value="{{goitietkiem.LaiSuat}}">
+        <input type="text" class="form-control" name="LaiSuat" required value="{{goitietkiem.LaiSuat}}">
 
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Ngày Diễn Ra:</label>
-        <input type="date" class="form-control"name="NgayDienRa" >
+        <input type="date" class="form-control" name="NgayDienRa">
 
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Ngày Kết Thúc: </label>
-        <input type="date" class="form-control"name="NgayKetThuc" >
+        <input type="date" class="form-control" name="NgayKetThuc">
 
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>

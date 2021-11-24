@@ -1,5 +1,10 @@
 <div class="khongduocxoa"></div>
-<p>{{message}}</p>
+{{#if message}}
+<div style="text-align: center" class="alert alert-{{message.type}}">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>{{message.intro}}</strong> {{message.message}}
+</div>
+{{/if}}
 <form method="post" action="/pay">
     <div class="form-group">
         <label for="exampleInputEmail1">Tên Tài Khoản: {{taikhoan.TenTK}}</label>
@@ -17,5 +22,6 @@
         <label for="exampleInputEmail1">Nhập số tiền muốn nạp: </label>
         <input type="text" class="form-control" name="SoTienNap" maxlength="15" minlength="5" required>
     </div>
-    <button type="submit" class="btn btn-primary"><img src="https://img.spideylab.com/2015/06/paypal-1.jpg" height="50" width="200" /></button>
+    <button type="submit" class="btn btn-primary"><img src="https://img.spideylab.com/2015/06/paypal-1.jpg" height="50"
+            width="200" /></button>
 </form>

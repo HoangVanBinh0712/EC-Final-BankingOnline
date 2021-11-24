@@ -6,8 +6,8 @@
       <h4 class="title text-center mt-4">
         Đăng nhập
       </h4>
+
       <form class="form-box px-3" method="POST" action="/login">
-        <p>{{message}}</p>
         <div class="form-input">
           <span><i class="fa fa-envelope-o"></i></span>
           <input type="text" class="form-control" id="username" name="username" placeholder="Nhập tài khoản"
@@ -23,7 +23,16 @@
             Submit
           </button>
         </div>
+        <div>
+          <p>Bạn chưa có tài khoản ? <a href="/register" class="btn btn-primary btn-custom">Đăng ký ngay </a> </p>
+        </div>
       </form>
+      {{#if message}}
+      <div style="text-align: center" class="alert alert-{{message.type}}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>{{message.intro}}</strong> {{message.message}}
+      </div>
+      {{/if}}
     </div>
   </div>
 </div>

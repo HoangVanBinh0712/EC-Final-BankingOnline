@@ -47,7 +47,11 @@ function route(app) {
         paypal.payment.create(create_payment_json, function (error, payment) {
             if (error) {
                 console.log(error)
-                req.flash('message', 'Có lỗi xảy ra khi nạp tiền vui lòng thử lại')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Có lỗi xảy ra khi nạp tiền vui lòng thử lại !',
+                    message: ''
+                }
                 return res.redirect('/');
             } else {
                 for (let i = 0; i < payment.links.length; i++) {
@@ -62,7 +66,11 @@ function route(app) {
 
     ////
     app.get('/cancle', function (req, res) {
-        req.flash('message', 'Có lỗi xảy ra khi nạp tiền vui lòng thử lại')
+        req.session.message = {
+            type: 'danger',
+            intro: 'Có lỗi xảy ra khi nạp tiền vui lòng thử lại !',
+            message: ''
+        }
         return res.redirect('/');
     });
     ////
@@ -72,7 +80,11 @@ function route(app) {
         if(await LichSuNapRut.findOne({paymentId: paymentId}))
         {
             //Tức là cái paymentId này đã sử dụng nạp lúc trước rồi
-            req.flash('message','Bạn đã nạp tiền bằng giao dịch này rồi')
+            req.session.message = {
+                type: 'danger',
+                intro: 'Bạn đã nạp tiền bằng giao dịch này rồi !',
+                message: ''
+            }
             return res.redirect("/NapTien")
         }
 
@@ -94,7 +106,11 @@ function route(app) {
                 };
                 paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
                     if (error) {
-                        req.flash('message', 'Có lỗi xảy ra khi nạp tiền vui lòng thử lại')
+                        req.session.message = {
+                            type: 'danger',
+                            intro: 'Có lỗi xảy ra khi nạp tiền vui lòng thử lại !',
+                            message: ''
+                        }
                         return res.redirect('/');
                     } else {
                         //console.log(JSON.stringify(payment));
@@ -104,7 +120,11 @@ function route(app) {
                         taikhoan = await TaiKhoan.findOneAndUpdate({ user: req.userId }, taikhoan, { new: true })
                         if (!taikhoan) {
                             res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                            req.flash('message', 'Có lỗi xảy ra, vui lòng đăng nhập lại để xác thực ')
+                            req.session.message = {
+                                type: 'danger',
+                                intro: 'Có lỗi xảy ra !',
+                                message: 'Vui lòng đăng nhập lại để xác thực.'
+                            }
                             return res.redirect('/login')
                         }
                         const Ten = "Nạp"
@@ -113,7 +133,11 @@ function route(app) {
                             Ten,paymentId,SoTien,user: req.userId
                         })
                         await lichsunaprut.save()
-                        req.flash('message', `Nạp ${SoTienNap} VNĐ thanh công!`);
+                        req.session.message = {
+                            type: 'success',
+                            intro: `Nạp ${SoTienNap} VNĐ thành công !`,
+                            message: ''
+                        }
                         return res.redirect('/TaiKhoan')
                     }
                 });
@@ -127,6 +151,15 @@ function route(app) {
     app.post('/RutTien', verify, async (req, res) => {
         const value = (parseFloat(req.body.SoTienRut) / 23300).toFixed(2).toString()
         const taikhoan = await TaiKhoan.findOne({ user: req.userId })
+        if(req.body.SoTienRut > taikhoan.SoDu)
+        {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Số dư không đủ !',
+                message: 'Vui lòng rút số tiền nhỏ hơn .'
+            }
+            return res.redirect('/RutTien')
+        }
         var email = req.body.email || taikhoan.email
         var sender_batch_id = Math.random().toString(36).substring(9);
         var create_payout_json = {
@@ -153,7 +186,11 @@ function route(app) {
             if (error) {
                 //Tiền chưa chuyển vậy redirect về / kèm message
                 console.log(error.response);
-                req.flash('message', 'Có lỗi xảy ra khi nạp tiền vui lòng thử lại')
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Có lỗi xảy ra khi nạp tiền vui lòng thử lại !',
+                    message: ''
+                }
                 return res.redirect('/NapTien')
             } else {
                 //Tiền chuyển rồi tiến hành cộng vào tài khoản của nó
@@ -162,7 +199,11 @@ function route(app) {
                 paypal.payout.get(payoutId, async function (error, payout) {
                     if (error) {
                         console.log(error);
-                        req.flash('message', 'Có lỗi xảy ra khi rút tiền vui lòng thử lại sau !')
+                        req.session.message = {
+                            type: 'danger',
+                            intro: 'Có lỗi xảy ra khi nạp tiền vui lòng thử lại !',
+                            message: ''
+                        }
                         return res.redirect('/RutTien')
                     } else {
                         //Thành công
@@ -173,7 +214,11 @@ function route(app) {
                         taikhoan = await TaiKhoan.findOneAndUpdate({ user: req.userId }, taikhoan, { new: true })
                         if (!taikhoan) {
                             res.clearCookie(process.env.NAME_TOKEN_SECRET);
-                            req.flash('message', 'Có lỗi xảy ra, vui lòng đăng nhập lại để xác thực ')
+                            req.session.message = {
+                                type: 'danger',
+                                intro: 'Có lỗi xảy ra khi nạp tiền !',
+                                message: 'Vui lòng đăng nhập lại để xác thực '
+                            }
                             return res.redirect('/login')
                         }
                         const Ten = "Rút"
@@ -183,7 +228,11 @@ function route(app) {
                             Ten,paymentId,SoTien,user: req.userId
                         })
                         await lichsunaprut.save()
-                        req.flash('message', `Rút ${SoTienRut} VNĐ thanh công!`);
+                        req.session.message = {
+                            type: 'success',
+                            intro: `Rút ${SoTienRut} VNĐ thành công!`,
+                            message: ''
+                        }
                         return res.redirect('/TaiKhoan')
                     }
                 });

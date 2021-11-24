@@ -1,7 +1,12 @@
 <div class="w3l-news" id="news">
   <section id="grids5-block" class="py-5">
     <div class="container py-lg-5 py-md-4 py-2">
-      <p>{{message}}</p>
+      {{#if message}}
+      <div style="text-align: center" class="alert alert-{{message.type}}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>{{message.intro}}</strong> {{message.message}}
+      </div>
+      {{/if}}
       {{#if people}}
       <p>Số người sử dụng dịch vụ: {{people}}</p>
       {{/if}}
