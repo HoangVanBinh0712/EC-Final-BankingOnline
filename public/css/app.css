@@ -2195,6 +2195,14 @@ fieldset:disabled a.btn {
   color: #fff;
   border-color: #fff; }
 
+.btn-search {
+  color: #614da7;
+  border-color: #000; }
+.btn-search:hover {
+  color: #fff;
+  background-color: #614da7;
+  border-color: #000; }
+
 .btn-outline-success:hover {
   color: #614da7;
   background-color: #fff;
@@ -3266,7 +3274,12 @@ input[type="button"].btn-block {
 
 .nav-link {
   display: block;
-  padding: 0.5rem 1rem; }
+  padding: 0px 10px 10px 10px;
+  transition: all 0.5s ease;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: .5px;
+}
 
 .nav-link:hover, .nav-link:focus {
   text-decoration: none; }
@@ -10242,7 +10255,7 @@ a.link-style1 {
 .mode-container {
   width: 24px;
   height: 24px;
-  padding: 1px 0; }
+ }
 
 .gg-sun {
   position: relative;
@@ -10307,7 +10320,9 @@ a.link-style1 {
 
 .mode-container i.gg-moon {
   display: block;
-  color: #eee; }
+  color: #eee; 
+  transition: all 0.5s ease;
+  }
 
 input:checked + .mode-container i.gg-sun {
   display: block; }
@@ -11460,7 +11475,8 @@ nav ul li a:hover {
   line-height: 28px;
   color: var(--heading-color);
   display: block;
-  font-weight: 600; }
+  font-weight: 600; 
+  padding-top: 6px;}
 
 .w3l-news .grids5-info h4 a:hover {
   color: var(--primary-color); }

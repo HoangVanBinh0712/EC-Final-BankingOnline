@@ -1,27 +1,60 @@
 <div class="khongduocxoa"></div>
-{{#if message}}
-<div style="text-align: center" class="alert alert-{{message.type}}">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <strong>{{message.intro}}</strong> {{message.message}}
+<div class="w3l-news" id="news">
+  <section id="grids5-block" class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="grids5-info">
+            {{#if message}}
+              <div
+                style="text-align: center"
+                class="alert alert-{{message.type}}"
+              >
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="alert"
+                >&times;</button>
+                <strong>{{message.intro}}</strong>
+                {{message.message}}
+              </div>
+            {{/if}}
+            <form method="post" action="/pay">
+              <div class="form-group ">
+                <label for="exampleInputEmail1" >Tên Tài Khoản:
+                  {{taikhoan.TenTK}}</label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Email:
+                  {{taikhoan.email}}</label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Số Tài Khoản:
+                  {{taikhoan.STK}}</label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Số Dư: {{taikhoan.SoDu}}</label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Nhập số tiền muốn nạp: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="SoTienNap"
+                  maxlength="15"
+                  minlength="5"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary"><img
+                  src="https://img.spideylab.com/2015/06/paypal-1.jpg"
+                  height="50"
+                  width="200"
+                /></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
-{{/if}}
-<form method="post" action="/pay">
-    <div class="form-group">
-        <label for="exampleInputEmail1">Tên Tài Khoản: {{taikhoan.TenTK}}</label>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">email: {{taikhoan.email}}</label>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Số Tài Khoản: {{taikhoan.STK}}</label>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Số Dư: {{taikhoan.SoDu}}</label>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Nhập số tiền muốn nạp: </label>
-        <input type="text" class="form-control" name="SoTienNap" maxlength="15" minlength="5" required>
-    </div>
-    <button type="submit" class="btn btn-primary"><img src="https://img.spideylab.com/2015/06/paypal-1.jpg" height="50"
-            width="200" /></button>
-</form>

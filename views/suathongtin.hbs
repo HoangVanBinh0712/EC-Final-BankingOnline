@@ -1,45 +1,97 @@
 <div class="khongduocxoa"></div>
+<div class="w3l-news" id="news">
+  <section id="grids5-block" class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="grids5-info">
+            <form method="post" action="/TaiKhoan/ChinhSua">
+              {{#if message}}
+                <div
+                  style="text-align: center"
+                  class="alert alert-{{message.type}}"
+                >
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="alert"
+                  >&times;</button>
+                  <strong>{{message.intro}}</strong>
+                  {{message.message}}
+                </div>
+              {{/if}}
+              <div class="form-group">
+                <label for="exampleInputEmail1">Tên Tài Khoản: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="TenTK"
+                  name="TenTK"
+                  value="{{taikhoan.TenTK}}"
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Email: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  value="{{taikhoan.email}}"
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">CCCD: {{taikhoan.CCCD}}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="CCCD"
+                  value="{{taikhoan.CCCD}}"
+                />
 
-<form method="post" action="/TaiKhoan/ChinhSua">
-    {{#if message}}
-    <div style="text-align: center" class="alert alert-{{message.type}}">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>{{message.intro}}</strong> {{message.message}}
-    </div>
-    {{/if}}
-    <div class="form-group">
-        <label for="exampleInputEmail1">Tên Tài Khoản: </label>
-        <input type="text" class="form-control" id="TenTK" name="TenTK" value="{{taikhoan.TenTK}}">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">email: </label>
-        <input type="text" class="form-control" id="email" name="email" value="{{taikhoan.email}}">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">CCCD: {{taikhoan.CCCD}}</label>
-        <input type="text" class="form-control" name="CCCD" value="{{taikhoan.CCCD}}">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Ngày Sinh:
+                  {{dateFormat taikhoan.NgaySinh "DD / MM / YYYY"}}</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  name="NgaySinh"
+                  value="{{dateFormat taikhoan.NgaySinh " DD / MM / YYYY"}}"
+                />
 
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Ngày Sinh: {{dateFormat taikhoan.NgaySinh "DD / MM / YYYY" }}</label>
-        <input type="date" class="form-control" name="NgaySinh" value="{{dateFormat taikhoan.NgaySinh " DD / MM / YYYY"
-            }}">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Số Dư: {{taikhoan.SoDu}}</label>
+                <input
+                  type="hidden"
+                  class="form-control"
+                  name="SoDu"
+                  value="{{taikhoan.SoDu}}"
+                />
 
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Số Dư: {{taikhoan.SoDu}}</label>
-        <input type="hidden" class="form-control" name="SoDu" value="{{taikhoan.SoDu}}">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Số Tài Khoản:
+                  {{taikhoan.STK}}</label>
+                <input
+                  type="hidden"
+                  class="form-control"
+                  name="STK"
+                  value="{{taikhoan.STK}}"
+                />
 
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Số Tài Khoản: {{taikhoan.STK}}</label>
-        <input type="hidden" class="form-control" name="STK" value="{{taikhoan.STK}}">
+              
+              <p class=" card-text"><span class="fa fa-calendar mr-2"></span>Ngày tạo tài khoản: {{dateFormat this.createdAt
+                            "DD / MM / YYYY" }}</p> 
+              
 
+           
+              <button style="margin-top:8px;" type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Tạo vào ngày: {{taikhoan.createdAt}}</label>
-        <input type="hidden" class="form-control" name="createdAt" value="{{taikhoan.createdAt}}">
-
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+  </section>
+</div>

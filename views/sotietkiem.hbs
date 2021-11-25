@@ -1,10 +1,11 @@
+
 <div class="w3l-news" id="news">
   <section id="grids5-block" class="py-5">
     <div class="container py-lg-5 py-md-4 py-2">
       <form class="form-inline my-2 my-lg-0" method="get" action="/SoTietKiemSearch">
         <input class="form-control mr-sm-2" type="Search" name="Search" id="Search" placeholder="Search"
           aria-label="Search" value="{{Search}}">
-        <button class="button" type="submit">Search</button>
+        <button class="btn btn-search my-2 my-sm-0" type="submit">Search</button>
       </form>
       {{#if message}}
       <div style="text-align: center" class="alert alert-{{message.type}}">
@@ -18,11 +19,11 @@
         <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
           <div class="grids5-info">
             <div class="card-body">
-              <h5 class="card-title">{{this.TenSo}}</h5>
-              <p class="card-text"> {{this.SoTienGui}}</p>
-              <p class="card-text"> {{this.ThoiHan}}</p>
-              <p class="card-text">{{this.LaiSuat}} </p>
-              <a href="/SoTietKiem/{{this._id}}" class="btn btn-primary">Chi
+              <h5 class="card-title">Tên sổ: {{this.TenSo}}</h5>
+              <p class="card-text">Số tiền gửi: {{this.SoTienGui}}</p>
+              <p class="card-text">Thời hạn: {{this.ThoiHan}}</p>
+              <p class="card-text">Lãi suất: {{this.LaiSuat}} </p>
+              <a href="/SoTietKiem/{{this._id}}" class="btn btn-primary" style="margin-top:6px;">Chi
                 Tiết</a>
             </div>
           </div>

@@ -1,40 +1,87 @@
 <div class="khongduocxoa"></div>
+<div class="w3l-news" id="news">
+  <section id="grids5-block" class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="grids5-info">
+            <form method="post" action="/GoiTietKiem/MoGoi">
+              {{#if message}}
+                <div
+                  style="text-align: center"
+                  class="alert alert-{{message.type}}"
+                >
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="alert"
+                  >&times;</button>
+                  <strong>{{message.intro}}</strong>
+                  {{message.message}}
+                </div>
+              {{/if}}
+              <div class="form-group">
+                <label for="exampleInputEmail1">Tên sổ: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="TenSo"
+                  name="TenSo"
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Số tiền gửi: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="SoTienGui"
+                  name="SoTienGui"
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Thời Hạn:
+                  {{goitietkiem.ThoiHan}}</label>
+                <input
+                  type="hidden"
+                  name="ThoiHan"
+                  value="{{goitietkiem.ThoiHan}}"
+                />
 
-<form method="post" action="/GoiTietKiem/MoGoi">
-    {{#if message}}
-    <div style="text-align: center" class="alert alert-{{message.type}}">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>{{message.intro}}</strong> {{message.message}}
-    </div>
-    {{/if}}
-    <div class="form-group">
-        <label for="exampleInputEmail1">Tên sổ: </label>
-        <input type="text" class="form-control" id="TenSo" name="TenSo">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Số tiền gửi: </label>
-        <input type="text" class="form-control" id="SoTienGui" name="SoTienGui">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Thời Hạn: {{goitietkiem.ThoiHan}}</label>
-        <input type="hidden" name="ThoiHan" value="{{goitietkiem.ThoiHan}}">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Lãi Suất:
+                  {{goitietkiem.LaiSuat}}</label>
+                <input
+                  type="hidden"
+                  name="LaiSuat"
+                  value="{{goitietkiem.LaiSuat}}"
+                />
 
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Lãi Suất: {{goitietkiem.LaiSuat}}</label>
-        <input type="hidden" name="LaiSuat" value="{{goitietkiem.LaiSuat}}">
+              </div>
+              <div class="form-group">
+                  <span class="fa fa-calendar mr-2"></span>
+                <label for="exampleInputEmail1">Ngày Gửi:
+                  {{dateFormat NgayGui "DD / MM / YYYY"}}</label>
+                <input type="hidden" name="NgayGui" value="{{NgayGui}}" />
 
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Ngày Gửi: {{dateFormat NgayGui "DD / MM / YYYY" }}</label>
-        <input type="hidden" name="NgayGui" value="{{NgayGui}}">
+              </div>
+              <div class="form-group">
+                  <span class="fa fa-calendar mr-2"></span>
+                <label for="exampleInputEmail1">Ngày Hết Hạn:
+                  {{dateFormat NgayHetHan "DD / MM / YYYY"}}</label>
+                <input type="hidden" name="NgayHetHan" value="{{NgayHetHan}}" />
 
+              </div>
+              <input
+                type="hidden"
+                name="GoiTietKiemId"
+                value="{{goitietkiem._id}}"
+              />
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Ngày Hết Hạn: {{dateFormat NgayHetHan "DD / MM / YYYY" }}</label>
-        <input type="hidden" name="NgayHetHan" value="{{NgayHetHan}}">
-
-    </div>
-    <input type="hidden" name="GoiTietKiemId" value="{{goitietkiem._id}}">
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+  </section>
+</div>

@@ -13,20 +13,22 @@
       <form class="form-inline my-2 my-lg-0" method="post" action="/TaiKhoan/XemTatCaNguoiDung">
         <input class="form-control mr-sm-2" type="Search" name="Search" id="Search" placeholder="Search"
           aria-label="Search" value="{{Search}}">
-        <button class="button" type="submit">Search</button>
+                <button class="btn btn-search my-2 my-sm-0" type="submit">Search</button>
       </form>
       <div class="row mt-lg-5 mt-4">
         {{#each taikhoan}}
         <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
           <div class="grids5-info">
             <h5 class="card-title"><a href="/TaiKhoan/XemTatCaNguoiDung/{{this.user}}"
-                class="btn btn-primary">{{this.TenTK}}</a></h5>
-            <p class="card-text"> {{this.email}}</p>
-            <p class="card-text"> {{this.CCCD}}</p>
-            <p class="card-text"> {{dateFormat this.NgaySinh "DD / MM / YYYY" }}</p>
-            <p class="card-text"> {{this.SoDu}}</p>
-            <p class="card-text">{{this.STK}} </p>
-            <p class="card-text"> {{dateFormat this.createdAt "DD / MM / YYYY" }}</p>
+                class="btn btn-primary">Tên tài khoản: {{this.TenTK}}</a></h5>
+            <p class="card-text">Email: {{this.email}}</p>
+            <p class="card-text">CMNN/CCCD: {{this.CCCD}}</p>
+            <p class=" card-text"><span class="fa fa-calendar mr-2"></span>Ngày sinh: {{dateFormat this.NgaySinh
+                            "DD / MM / YYYY" }}</p> 
+            <p class="card-text">Số dư: {{this.SoDu}}</p>
+            <p class="card-text">Số tài khoản: {{this.STK}} </p>
+            <p class=" card-text"><span class="fa fa-calendar mr-2"></span>Ngày tạo tài khoản: {{dateFormat this.createdAt
+                            "DD / MM / YYYY" }}</p> 
           </div>
         </div>
         {{/each}}
