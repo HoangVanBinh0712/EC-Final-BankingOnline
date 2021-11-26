@@ -10316,12 +10316,15 @@ a.link-style1 {
 
 .mode-container i.gg-sun {
   display: none;
-  color: #eee; }
+  color: #eee;
+  transition: all 0.5s ease;
+  top: -3px; }
 
 .mode-container i.gg-moon {
   display: block;
   color: #eee; 
   transition: all 0.5s ease;
+  top: -2px;
   }
 
 input:checked + .mode-container i.gg-sun {
@@ -10405,7 +10408,7 @@ a.dropdown-item {
   font-weight: 400;
   letter-spacing: .5px;
   padding: 5px 24px;
-  color: var(--heading-color); }
+  color: #000; }
 
 a.dropdown-item:hover {
   color: var(--primary-color);
