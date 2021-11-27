@@ -2,28 +2,36 @@
   <section id="grids5-block" class="py-5">
     <div class="container py-lg-5 py-md-4 py-2">
       {{#if message}}
-      <div style="text-align: center" class="alert alert-{{message.type}}">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>{{message.intro}}</strong> {{message.message}}
-      </div>
+        <div style="text-align: center" class="alert alert-{{message.type}}">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+          >&times;</button>
+          <strong>{{message.intro}}</strong>
+          {{message.message}}
+        </div>
       {{/if}}
       {{#if lichsuguitietkiem}}
-      <div class="row mt-lg-5 mt-4">
-        {{#each lichsuguitietkiem}}
-        <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
-          <div class="grids5-info">
-            <div class="card-body">
-              <h5 class="card-title">{{this.Ten}}</h5>
-              <p class="card-text"> {{this.TenSo}}</p>
-              <p class="card-text"> {{this.SoTien}}</p>
-              <p class="card-text">{{dateFormat this.Ngay "DD / MM / YYYY" }} </p>
+        <div class="row mt-lg-5 mt-4">
+          {{#each lichsuguitietkiem}}
+            <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
+              <div class="grids5-info">
+                <div class="card-body">
+                  <h5 class="card-title">Loại giao dịch: {{this.Ten}}</h5>
+                  <p class="card-text">Tên sổ: {{this.TenSo}}</p>
+                  <p class="card-text">Số tiền {{this.SoTien}}</p>
+                  <p class="card-text"><span
+                      class="fa fa-calendar mr-2"
+                    ></span>Ngày giao dịch:
+                    {{dateFormat this.Ngay "DD / MM / YYYY"}}</p>
+                </div>
+              </div>
             </div>
-          </div>
+          {{/each}}
         </div>
-        {{/each}}
-      </div>
       {{else}}
-      <p>Bạn chưa mở gói hay hủy gói lần nào . !</p>
+        <p>Bạn chưa mở gói hay hủy gói lần nào . !</p>
       {{/if}}
     </div>
   </section>

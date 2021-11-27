@@ -1,26 +1,45 @@
 <div class="khongduocxoa"></div>
-<div class="row">
-    <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-
-                <p>Tông số tiền đang có: {{sotien}}</p>
-                <h5 class="card-title">{{taikhoan.TenTK}}</h5>
-                <p class="card-text"> {{taikhoan.email}}</p>
-                <p class="card-text"> {{taikhoan.CCCD}}</p>
-                <p class="card-text"> {{dateFormat taikhoan.NgaySinh "DD / MM / YYYY" }}</p>
-                <p class="card-text"> {{taikhoan.SoDu}}</p>
-                <p class="card-text">{{taikhoan.STK}} </p>
-                <p class="card-text"> {{dateFormat taikhoan.createdAt "DD / MM / YYYY" }}</p>
-                <a href="/TaiKhoan/ChinhSua" class="btn btn-primary">Chỉnh sửa thông tin </a>
-                <a href="/TaiKhoan/DoiMatKhau" class="btn btn-primary">Đổi mật khẩu </a>
-                {{#if message}}
-                <div style="text-align: center" class="alert alert-{{message.type}}">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>{{message.intro}}</strong> {{message.message}}
-                </div>
-                {{/if}}
+<div class="khongduocxoa"></div>
+<div class="w3l-news" id="news">
+  <section id="grids5-block" class="py-5">
+<div class="container">
+  <div class="row">
+   
+        <div class="col-md-6 ">
+            <div class="grids5-info">
+          <h5 class="card-title ">Tên tài khoản: {{taikhoan.TenTK}}</h5>
+          <p>Tông số tiền đang có: {{sotien}}</p>
+          <p class="card-text  ">Email: {{taikhoan.email}}</p>
+          <p class="card-text ">CMNN/CCCD: {{taikhoan.CCCD}}</p>
+          <p class=" card-text  "><span class="fa fa-calendar mr-2"></span>Ngày sinh: {{dateFormat this.NgaySinh
+                            "DD / MM / YYYY" }}</p>
+         <p class="card-text  ">Số dư: {{taikhoan.SoDu}}</p>
+            <p class="card-text ">Số tài khoản: {{taikhoan.STK}} </p>
+        <p class=" card-text "><span class="fa fa-calendar mr-2"></span>Ngày tạo tài khoản: {{dateFormat this.createdAt
+                            "DD / MM / YYYY" }}</p> 
+          <a href="/TaiKhoan/ChinhSua" class="btn btn-primary" style="margin-top: 8px;">Chỉnh sửa thông
+            tin
+          </a>
+          <a href="/TaiKhoan/DoiMatKhau" class="btn btn-primary" style="margin-top: 8px;">Đổi mật khẩu
+          </a>
+          {{#if message}}
+            <div
+              style="text-align: center;"
+              class="alert alert-{{message.type}}"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+              >&times;</button>
+              <strong>{{message.intro}}</strong>
+              {{message.message}}
             </div>
+          {{/if}}
         </div>
     </div>
+  </div>
 </div>
+</section>
+</div>
+<div class="khongduocxoa"></div>

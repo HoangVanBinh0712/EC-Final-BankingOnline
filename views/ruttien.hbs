@@ -1,33 +1,72 @@
 <div class="khongduocxoa"></div>
-
-<form method="post" action="/RutTien">
-    <div class="form-group">
-        <label for="exampleInputEmail1">Tên Tài Khoản: {{taikhoan.TenTK}}</label>
+<div class="w3l-news" id="news">
+  <section id="grids5-block" class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="grids5-info">
+            <form method="post" action="/RutTien">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Tên Tài Khoản:
+                  {{taikhoan.TenTK}}</label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">email:
+                  {{taikhoan.email}}</label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Số Tài Khoản:
+                  {{taikhoan.STK}}</label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Số Dư: {{taikhoan.SoDu}}</label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Nhập địa chỉ email đã đăng kí
+                  paypal:
+                </label><br />
+                <label style="color: red;"><small>Nếu nhập địa chỉ sai sẽ mất
+                    tiền vui lòng kiểm tra kỹ !</small></label>
+                <input
+                  type="email"
+                  class="form-control"
+                  name="email"
+                  placeholder="Nhập Email"
+                  aria-label="Nhập Email"
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Nhập số tiền muốn rút: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="SoTienRut"
+                  maxlength="15"
+                  minlength="5"
+                  placeholder="Nhập Số Tiền Muốn Rút"
+                  aria-label="Số Tiền Muốn Rút"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Rút</button>
+              {{#if message}}
+                <div
+                  style="text-align: center"
+                  class="alert alert-{{message.type}}"
+                >
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="alert"
+                  >&times;</button>
+                  <strong>{{message.intro}}</strong>
+                  {{message.message}}
+                </div>
+              {{/if}}
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">email: {{taikhoan.email}}</label>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Số Tài Khoản: {{taikhoan.STK}}</label>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Số Dư: {{taikhoan.SoDu}}</label>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Nhập địa chỉ email đã đăng kí paypal: </label><br>
-        <label style="color: red;"><small>Nếu nhập địa chỉ sai sẽ mất tiền vui lòng kiểm tra kỹ !</small></label>
-        <input type="email" class="form-control" name="email" placeholder="Nhập Email" aria-label="Nhập Email">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Nhập số tiền muốn rút: </label>
-        <input type="text" class="form-control" name="SoTienRut" maxlength="15" minlength="5"
-            placeholder="Nhập Số Tiền Muốn Rút" aria-label="Số Tiền Muốn Rút" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Rút</button>
-    {{#if message}}
-    <div style="text-align: center" class="alert alert-{{message.type}}">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>{{message.intro}}</strong> {{message.message}}
-    </div>
-    {{/if}}
-</form>
+  </section>
+</div>

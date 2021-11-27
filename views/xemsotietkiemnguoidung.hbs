@@ -1,27 +1,38 @@
 <div class="khongduocxoa"></div>
+<div class="w3l-news" id="news">
+  <section id="grids5-block" class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="grids5-info">
+            <p>Người dùng: {{nguoidung}}</p>
+            <p>Số lượng sổ: {{soluong}}</p>
 
-<p>Người dùng: {{nguoidung}}</p>
-<p>Số lượng sổ: {{soluong}}</p>
+            {{#if sotietkiem}}
+              {{#each sotietkiem}}
 
-{{#if sotietkiem}}
-{{#each sotietkiem}}
-<div class="row">
-    <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">{{this.TenSo}}</h5>
-                <p class="card-text"> {{this.STK}}</p>
-                <p class="card-text"> {{this.CCCD}}</p>
-                <p class="card-text"> {{this.SoTienGui}}</p>
-                <p class="card-text"> {{this.ThoiHan}}</p>
-                <p class="card-text">{{this.LaiSuat}} </p>
-                <p class="card-text"> {{dateFormat this.NgayGui "DD / MM / YYYY" }}</p>
-                <p class="card-text">{{dateFormat this.NgayHetHan "DD / MM / YYYY" }}</p>
-            </div>
+                <h5 class="card-title"> Tên sổ: {{this.TenSo}}</h5>
+                <p class="card-text">Số tài khoản: {{this.STK}}</p>
+                <p class="card-text">CMNN/CCCD: {{this.CCCD}}</p>
+                <p class="card-text">Số tiền gửi: {{this.SoTienGui}}</p>
+                <p class="card-text">Thời hạn: {{this.ThoiHan}}</p>
+                <p class="card-text">Lãi suất: {{this.LaiSuat}} </p>
+                <p class="card-text"><span
+                    class="fa fa-calendar mr-2"
+                  ></span>Ngày gửi:
+                  {{dateFormat this.NgayGui "DD / MM / YYYY"}}</p>
+                <p class="card-text"><span
+                    class="fa fa-calendar mr-2"
+                  ></span>Ngày hết hạn:
+                  {{dateFormat this.NgayHetHan "DD / MM / YYYY"}}</p>
+
+              {{/each}}
+            {{else}}
+              <p> Người dùng {{nguoidung}} chưa có sổ tiết kiệm nào !</p>
+            {{/if}}
+          </div>
         </div>
+      </div>
     </div>
+  </section>
 </div>
-{{/each}}
-{{else}}
-<p> Người dùng {{nguoidung}} chưa có sổ tiết kiệm nào !</p>
-{{/if}}

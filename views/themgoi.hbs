@@ -1,12 +1,17 @@
-<div class="khongduocxoa"></div>
+
 <form method="post" action="/GoiTietKiem/Them">
+<div class="w3l-news" id="news">
+  <section id="grids5-block" class="py-5">
+    <div class="container  py-2">
+        <div class="row mt-lg-5 mt-4">           
+                 <div class="grids5-info">                         
     {{#if message}}
-    <div style="text-align: center" class="alert alert-{{message.type}}">
+    <div style="text-align: center;" class="alert alert-{{message.type}}">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>{{message.intro}}</strong> {{message.message}}
     </div>
     {{/if}}
-    <div class="form-group">
+    <div style="width:400px;" class="form-group">
         <label for="exampleInputEmail1">Tên Gói: </label>
         <input type="text" class="form-control" id="TenGoi" name="TenGoi" minlength="2" required>
     </div>
@@ -35,4 +40,9 @@
 
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
+</div>
+</div>
+</div>
+  </section>
+</div>
 </form>
