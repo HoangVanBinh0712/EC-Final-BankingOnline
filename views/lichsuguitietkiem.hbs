@@ -20,7 +20,10 @@
                 <div class="card-body">
                   <h5 class="card-title">Loại giao dịch: {{this.Ten}}</h5>
                   <p class="card-text">Tên sổ: {{this.TenSo}}</p>
-                  <p class="card-text">Số tiền {{this.SoTien}}</p>
+                  <p class="card-text">Số tiền: {{this.SoTien}}</p>
+                  {{#if this.ChiTiet}}
+                  <p class="card-text">Chi Tiết: {{this.ChiTiet}}</p>
+                  {{/if}}
                   <p class="card-text"><span
                       class="fa fa-calendar mr-2"
                     ></span>Ngày giao dịch:

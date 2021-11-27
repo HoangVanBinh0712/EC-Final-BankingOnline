@@ -140,7 +140,7 @@ class Controller {
         }
     }
     index(req, res) {
-        const username = cookies.get(req, 'getUsername')
+        const username = cookies.get(req, 'getUsername') 
         const role = cookies.get(req, "role")
         var isAdmin = false
         if (role >= 1)
@@ -592,6 +592,7 @@ class Controller {
     }
     async huygoi(req, res) {
         try {
+            var ChiTiet = ""
             const SoTietKiemDeleteCondition = { _id: req.params._id, user: req.userId }
             //Lấy số tiền nó gửi
             const sotietkiem = await SoTietKiem.findOne(SoTietKiemDeleteCondition)
@@ -605,23 +606,31 @@ class Controller {
                 var songay
                 //trước thời hạn
                 if (sotietkiem.NgayHetHan > now) {
+                    const gtk = mongoosetoObject(await GoiTietKiem.findOne({ TenGoi: "Không Kỳ Hạn" }))
                     daygui = sotietkiem.NgayGui.getDate()
                     monthgui = sotietkiem.NgayGui.getMonth()
                     yeargui = sotietkiem.NgayGui.getFullYear()
                     songay = (now.getFullYear() - yeargui) * 360 + (now.getMonth() - monthgui) * 30 + (now.getDate() - daygui)
-                    tienlai = songay * 0.005 * sotietkiem.SoTienGui / 360
+                    tienlai = (songay * parseFloat(gtk.LaiSuat) * sotietkiem.SoTienGui / 360).toFixed(4)
+                    const tongtien = (parseFloat(tienlai) + parseFloat(sotietkiem.SoTienGui)).toFixed(4)
+                    ChiTiet = `Lấy trước thời hạn. Tổng số ngày gửi: ${songay}. Lãi không kỳ hạn: ${gtk.LaiSuat}/Năm. Tổng số tiền lãi là:`
+                        + `${songay} * ${gtk.LaiSuat}*${sotietkiem.SoTienGui} / 360 = ${tienlai}. Tổng Số tiền rút là: ${tienlai} + ${sotietkiem.SoTienGui} = ${tongtien}`
                 }
                 //Đúng thời hạn
                 if (sotietkiem.NgayHetHan.getFullYear() <= now.getFullYear()
                     && sotietkiem.NgayHetHan.getMonth() <= now.getMonth()
                     && sotietkiem.NgayHetHan.getDate() <= now.getDate()) {
-                    tienlai = sotietkiem.LaiSuat * sotietkiem.SoTienGui
+                    tienlai = parseFloat(sotietkiem.LaiSuat) * parseFloat(sotietkiem.SoTienGui).toFixed(4)
+                    const tongtien = (parseFloat(tienlai) + parseFloat(sotietkiem.SoTienGui)).toFixed(4)
+                    ChiTiet = `Lấy đúng thời hạn. Lãi Suất: ${sotietkiem.LaiSuat}. Tổng số tiền lãi là:`
+                        + `${sotietkiem.LaiSuat}*${sotietkiem.SoTienGui} = ${tienlai}. Tổng Số tiền rút là: ${tienlai} + ${sotietkiem.SoTienGui} = ${tongtien}`
+                    console.log(ChiTiet)
                 }
                 let taikhoan = await TaiKhoan.findOne({ user: req.userId })
                 const sotien = taikhoan.SoDu
                 try {
                     //Tính lãi: 
-                    taikhoan.SoDu = (taikhoan.SoDu + tienlai + sotietkiem.SoTienGui).toFixed(4)
+                    taikhoan.SoDu = (parseFloat(taikhoan.SoDu) + parseFloat(tienlai) + parseFloat(sotietkiem.SoTienGui)).toFixed(4)
                     // All good
                     const TaiKhoanUpdateCondition = { _id: taikhoan._id, user: req.userId }
                     taikhoan = await TaiKhoan.findOneAndUpdate(
@@ -647,16 +656,16 @@ class Controller {
                     }
                     //Tạo lịch sử
                     const Ten = "Hủy Gói"
-                    const SoTien = (tienlai + sotietkiem.SoTienGui).toFixed(4)
+                    const SoTien = (parseFloat(tienlai) + parseFloat(sotietkiem.SoTienGui)).toFixed(4)
                     const TenSo = sotietkiem.TenSo
                     let lichsugui = new LichSuGuiTietKiem({
-                        Ten, TenSo, SoTien, user: req.userId
+                        Ten, TenSo, SoTien, ChiTiet, user: req.userId
                     })
                     await lichsugui.save()
                     req.session.message = {
                         type: 'success',
                         intro: 'Hủy gói thành công ! ',
-                        message: `Nhận ${(tienlai + sotietkiem.SoTienGui).toFixed(4)} VNĐ`
+                        message: `Nhận ${SoTien} VNĐ`
                     }
                     res.redirect('/TaiKhoan')
                 } catch (error) {
@@ -1310,7 +1319,7 @@ class Controller {
         const lichsuchuyentien = multipleMongooseToObject(await LichSuChuyenTien.find({ userchuyen: req.userId }))
         const lichsunhantien = multipleMongooseToObject(await LichSuChuyenTien.find({ userNhan: req.userId }))
 
-        return res.render('lichsuchuyentien', { lichsuchuyentien: lichsuchuyentien,lichsunhantien:lichsunhantien ,isAdmin: isAdmin, username: username, message: message })
+        return res.render('lichsuchuyentien', { lichsuchuyentien: lichsuchuyentien, lichsunhantien: lichsunhantien, isAdmin: isAdmin, username: username, message: message })
     }
 }
 
