@@ -965,7 +965,7 @@ class Controller {
                 .then(taikhoan => {
                     var message = req.session.message
                     delete req.session.message
-                    res.render('ruttien', { taikhoan: mongoosetoObject(taikhoan),message:message, username: username, isAdmin: isAdmin })
+                    res.render('ruttien', { taikhoan: mongoosetoObject(taikhoan), message: message, username: username, isAdmin: isAdmin })
                 })
         }
     }
@@ -1231,6 +1231,86 @@ class Controller {
                 delete req.session.message
                 res.render('lichsuguitietkiem', { lichsuguitietkiem: multipleMongooseToObject(lichsuguitietkiem), isAdmin: isAdmin, username: username, message: message })
             })
+    }
+    async chuyentien(req, res) {
+        const role = cookies.get(req, "role")
+        var isAdmin = false
+        if (role >= 1)
+            isAdmin = true
+        var username = cookies.get(req, 'getUsername')
+        if (req.method == 'GET') {
+            var message = req.session.message
+            delete req.session.message
+            const taikhoan = mongoosetoObject(await TaiKhoan.findOne({ user: req.userId }))
+            return res.render('chuyentien', { taikhoan: taikhoan, isAdmin: isAdmin, username: username, message: message })
+        } else {
+            const { STKNhan, SoTienChuyen, NoiDung } = req.body
+            if (!STKNhan || !SoTienChuyen || SoTienChuyen <= 0) {
+                //message
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Vui lòng nhập thông tin hợp lệ ! ',
+                    message: ''
+                }
+                return res.redirect('/TaiKhoan/ChuyenTien')
+            }
+            var taikhoangui = mongoosetoObject(await TaiKhoan.findOne({ user: req.userId }))
+            if (taikhoangui.SoDu < SoTienChuyen) {
+                //message
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Số dư không đủ ! ',
+                    message: ''
+                }
+                return res.redirect('/TaiKhoan/ChuyenTien')
+            }
+            //Kiem tra STK valid
+            var taikhoan = await TaiKhoan.findOne({ STK: STKNhan })
+            if (!taikhoan) {
+                //message
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Số tài khoản không tồn tại ! ',
+                    message: ''
+                }
+                return res.redirect('/TaiKhoan/ChuyenTien')
+            }
+            //all good
+            const NguoiChuyen = taikhoangui.STK
+            const NguoiNhan = taikhoan.STK
+            const SoTien = SoTienChuyen
+            const LichSuChuyenTien = require('../models/LichSuChuyenTien')
+            const lichsuchuyentien = new LichSuChuyenTien({
+                NguoiChuyen, NguoiNhan, SoTien, NoiDung,
+                userchuyen: req.userId, userNhan: taikhoan.user
+            })
+            await lichsuchuyentien.save()
+            taikhoangui.SoDu = (parseFloat(taikhoangui.SoDu) - parseFloat(SoTienChuyen)).toFixed(4)
+            taikhoan.SoDu = (parseFloat(taikhoan.SoDu) + parseFloat(SoTienChuyen)).toFixed(4)
+            await TaiKhoan.findOneAndUpdate({ _id: taikhoangui._id }, taikhoangui, { new: true })
+            await TaiKhoan.findOneAndUpdate({ _id: taikhoan._id }, taikhoan, { new: true })
+            //Trả về trang tài khoản kèm message
+            req.session.message = {
+                type: 'success',
+                intro: `Gửi thành công ${SoTienChuyen} cho STK: ${STKNhan}! `,
+                message: ''
+            }
+            return res.redirect('/TaiKhoan')
+        }
+    }
+    async lichsuchuyentien(req, res) {
+        const role = cookies.get(req, "role")
+        var isAdmin = false
+        if (role >= 1)
+            isAdmin = true
+        var username = cookies.get(req, 'getUsername')
+        var message = req.session.message
+        delete req.session.message
+        const LichSuChuyenTien = require('../models/LichSuChuyenTien')
+        const lichsuchuyentien = multipleMongooseToObject(await LichSuChuyenTien.find({ userchuyen: req.userId }))
+        const lichsunhantien = multipleMongooseToObject(await LichSuChuyenTien.find({ userNhan: req.userId }))
+
+        return res.render('lichsuchuyentien', { lichsuchuyentien: lichsuchuyentien,lichsunhantien:lichsunhantien ,isAdmin: isAdmin, username: username, message: message })
     }
 }
 

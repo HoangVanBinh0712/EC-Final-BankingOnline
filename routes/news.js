@@ -39,6 +39,8 @@ router.get('/TaiKhoan/XemTatCaNguoiDung/:_id', verify, Controller.xemsotietkiemn
 router.get('/TaiKhoan/XemTatCaNguoiDung', verify, Controller.xemtatcanguoidung)//admin
 router.post('/TaiKhoan/XemTatCaNguoiDung', verify, Controller.xemtatcanguoidung)//admin
 
+router.get('/TaiKhoan/ChuyenTien',verify,Controller.chuyentien)
+router.post('/TaiKhoan/ChuyenTien',verify,Controller.chuyentien)
 router.post('/TaiKhoan/ChinhSua', verify, Controller.suathongtin)//Sửa thông tin
 router.get('/TaiKhoan/ChinhSua', verify, Controller.suathongtin)
 router.get('/TaiKhoan', verify, Controller.xemthongtin)//Xem thông tin
@@ -47,6 +49,8 @@ router.get('/TaiKhoan', verify, Controller.xemthongtin)//Xem thông tin
 router.get('/NapTien',verify ,Controller.naptien)
 
 router.get('/RutTien',verify ,Controller.ruttien)
+
+router.get('/LichSuChuyenTien',verify,Controller.lichsuchuyentien)
 
 router.get('/LichSuNapRut',verify,Controller.lichsunaprut)
 router.get('/LichSuGuiTietKiem',verify,Controller.lichsuguitietkiem)
