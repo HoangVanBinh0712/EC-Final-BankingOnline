@@ -171,12 +171,62 @@
     </div>
 </section>
 
+<div class="w3l-news" id="news">
+    <section id="grids5-block" class="py-5">
+        <div class="container py-lg-5 py-md-4 py-2">
+            <h3 class="title-big text-center">Các gói tiết kiệm</h3>
+            <h5 class="text-center">Số lượng gói đang có: {{soluong}}</h5>
+            <div class="text-center">
+                {{#if message}}
+                <div style="text-align: center" class="alert alert-{{message.type}}">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>{{message.intro}}</strong> {{message.message}}
+                </div>
+                {{/if}}
+                {{#if isAdmin}}
+                <a href="/GoiTietKiem/Them" class="btn btn-primary text-center btn-custom">Thêm gói</a>
+                {{/if}}
+            </div>
+            <div class="row mt-lg-5 mt-4 ">
+                {{#each goitietkiem}}
+                <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
+                    <div class="grids5-info">
+                        <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="d-block zoom"><img src="/img/goitk.jpg" alt=""
+                                class="img-fluid news-image" /></a>
+                        <h4><a href="/GoiTietKiem/MoGoi/{{this._id}}">{{this.TenGoi}}</a></h4>
+                        <p>Thời Hạn: {{this.ThoiHan}}</p>
+                        <p class="date"><span class="fa fa-calendar mr-2"></span>Bắt đầu từ: {{dateFormat
+                            this.NgayDienRa "DD / MM / YYYY" }}</p>
+                        <p class="date"><span class="fa fa-calendar mr-2"></span>Đến ngày: {{dateFormat this.NgayKetThuc
+                            "DD / MM / YYYY" }}</p>
+                        <p>Ưu đãi: {{this.UuDai}}</p>
+                        <p>Lãi suất: {{this.LaiSuat}}</p>
+                        <div class="text-center ">
+                            <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="btn btn-primary btn-custom">Mở gói ngay</a>
+                            {{#if ../isAdmin}}
+                            <a href="/GoiTietKiem/Sua/{{this._id}}" class="btn btn-primary btn-custom">Sửa</a>
+                            <a href="/GoiTietKiem/Xoa/{{this._id}}" class="btn btn-primary btn-custom">Xóa</a>
+                            {{/if}}
+                        </div>
+
+                    </div>
+                </div>
+                {{/each}}
+                {{!--
+                <div class="text-center">
+                    <a class="btn btn-style btn-primary mt-sm-5 mt-4" href="#blog">Xem tất cả các gói</a>
+                </div> --}}
+            </div>
+        </div>
+    </section>
+</div>
+
 <section class="w3l-mobile-content-6 py-5">
     <div class="mobile-info py-lg-5 py-md-4 py-2">
         <!-- /mobile-info-->
         <div class="container">
-            <h6 class="title-small text-center" Tính năng và lợi ích của việc gửi tiền tiết kiệm online</h6>
-                <h3 class="title-big mb-5 text-center">The Best Choice</h3>
+            <h3 class="title-small text-center">Tính năng và lợi ích của việc gửi tiền tiết kiệm online </h3>
+                <h6 class="title-big mb-5 text-center">The Best Choice</h6>
                 <div class="row mobile-info-inn mx-lg-0">
                     <div class="col-lg-4 mobile-right text-right">
                         <div class="row mobile-right-grids mb-lg-5 mb-4">
@@ -262,56 +312,6 @@
     </div>
 </section>
 
-
-<div class="w3l-news" id="news">
-    <section id="grids5-block" class="py-5">
-        <div class="container py-lg-5 py-md-4 py-2">
-            <h3 class="title-big text-center">Các gói tiết kiệm</h3>
-            <h5 class="text-center">Số lượng gói đang có: {{soluong}}</h5>
-            <div class="text-center">
-                {{#if message}}
-                <div style="text-align: center" class="alert alert-{{message.type}}">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>{{message.intro}}</strong> {{message.message}}
-                </div>
-                {{/if}}
-                {{#if isAdmin}}
-                <a href="/GoiTietKiem/Them" class="btn btn-primary text-center btn-custom">Thêm gói</a>
-                {{/if}}
-            </div>
-            <div class="row mt-lg-5 mt-4 ">
-                {{#each goitietkiem}}
-                <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
-                    <div class="grids5-info">
-                        <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="d-block zoom"><img src="/img/goitk.jpg" alt=""
-                                class="img-fluid news-image" /></a>
-                        <h4><a href="/GoiTietKiem/MoGoi/{{this._id}}">{{this.TenGoi}}</a></h4>
-                        <p>Thời Hạn: {{this.ThoiHan}}</p>
-                        <p class="date"><span class="fa fa-calendar mr-2"></span>Bắt đầu từ: {{dateFormat
-                            this.NgayDienRa "DD / MM / YYYY" }}</p>
-                        <p class="date"><span class="fa fa-calendar mr-2"></span>Đến ngày: {{dateFormat this.NgayKetThuc
-                            "DD / MM / YYYY" }}</p>
-                        <p>Ưu đãi: {{this.UuDai}}</p>
-                        <p>Lãi suất: {{this.LaiSuat}}</p>
-                        <div class="text-center ">
-                            <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="btn btn-primary btn-custom">Mở gói ngay</a>
-                            {{#if ../isAdmin}}
-                            <a href="/GoiTietKiem/Sua/{{this._id}}" class="btn btn-primary btn-custom">Sửa</a>
-                            <a href="/GoiTietKiem/Xoa/{{this._id}}" class="btn btn-primary btn-custom">Xóa</a>
-                            {{/if}}
-                        </div>
-
-                    </div>
-                </div>
-                {{/each}}
-                {{!--
-                <div class="text-center">
-                    <a class="btn btn-style btn-primary mt-sm-5 mt-4" href="#blog">Xem tất cả các gói</a>
-                </div> --}}
-            </div>
-        </div>
-    </section>
-</div>
 
 <!-- //mobile section --->
 <!-- /bottom-grids-->
