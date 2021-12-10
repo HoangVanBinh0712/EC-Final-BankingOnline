@@ -11437,7 +11437,8 @@ nav ul li a:hover {
     font-size: 22px; } }
 
 .w3l-news {
-  background: var(--bg-grey); }
+  background: var(--bg-grey);
+}
 
 .w3l-news .blog-info {
   padding: 30px 25px;

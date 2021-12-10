@@ -14,7 +14,7 @@
                                         <p class="mt-md-4 mt-3">Bạn có thể chọn một gói tiết kiệm ưng ý với vài "cú"
                                             click chuột.
                                         </p>
-                                        <a class="btn btn-style btn-outline-light mt-sm-5 mt-4 mr-2" href="about.html">
+                                        <a class="btn btn-style btn-outline-light mt-sm-5 mt-4 mr-2" href="#guide">
                                             Đọc thêm</a>
                                     </div>
                                     <div class="col-lg-5 col-md-8 img offset-lg-1 mt-lg-0 mt-4">
@@ -38,7 +38,7 @@
                                         <p class="mt-md-4 mt-3">Chúng tôi cung cấp các gói tiết kiệm với lãi suất "cực"
                                             hấp dẫn.
                                         </p>
-                                        <a class="btn btn-style btn-outline-light mt-sm-5 mt-4 mr-2" href="about.html">
+                                        <a class="btn btn-style btn-outline-light mt-sm-5 mt-4 mr-2" href="#cacgoitietkiem">
                                             Đọc thêm</a>
                                     </div>
                                     <div class="col-lg-5 col-md-8 img offset-lg-1 mt-lg-0 mt-4">
@@ -62,7 +62,7 @@
                                             bảo mật quyền riêng tư
                                             và đảm bảo quyền lợi của khách hàng.
                                         </p>
-                                        <a class="btn btn-style btn-outline-light mt-sm-5 mt-4 mr-2" href="about.html">
+                                        <a class="btn btn-style btn-outline-light mt-sm-5 mt-4 mr-2" href="#bestchoice">
                                             Đọc thêm</a>
                                     </div>
                                     <div class="col-lg-5 col-md-8 img offset-lg-1 mt-lg-0 mt-4">
@@ -84,7 +84,7 @@
                                         <h5> Hỗ trợ 24/7 </h5>
                                         <p class="mt-md-4 mt-3">Chúng tôi sẵn sàng hỗ trợ bạn mọi lúc 24/7
                                         </p>
-                                        <a class="btn btn-style btn-outline-light mt-sm-5 mt-4 mr-2" href="about.html">
+                                        <a class="btn btn-style btn-outline-light mt-sm-5 mt-4 mr-2" href="#support">
                                             Đọc thêm</a>
                                     </div>
                                     <div class="col-lg-5 col-md-8 img offset-lg-1 mt-lg-0 mt-4">
@@ -159,7 +159,7 @@
                     <p class="mt-md-4 mt-3">Website được tạo ra trong hình dịch COVID-19 diễn ra vô
                         cùng phức tạp. Hầu hết các dịch vụ đều chuyển đổi số như học tập, thanh toán hóa đơn,
                         mua hàng qua mạng,.. và đăc biệt là gửi tiền tiết kiệm online</p>
-                    <a class="btn btn-style btn-primary mt-sm-5 mt-4 mr-2" href="#"> Đọc thêm</a>
+                    <a class="btn btn-style btn-primary mt-sm-5 mt-4 mr-2" href="https://moh.gov.vn/" target="_blank"> Đọc thêm</a>
                 </div>
                 <div class="col-lg-5">
                     <div class="position-relative">
@@ -171,12 +171,79 @@
     </div>
 </section>
 
-<section class="w3l-mobile-content-6 py-5">
+<div class="w3l-news" id="cacgoitietkiem">
+    <section id="grids5-block" class="py-5">
+        <div class="container py-lg-5 py-md-4 py-2">
+            <h3 class="title-big text-center">Các gói tiết kiệm</h3>
+            <h5 class="text-center">Số lượng gói đang có: {{soluong}}</h5>
+            <div class="text-center">
+                {{#if message}}
+                <div style="text-align: center" class="alert alert-{{message.type}}">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>{{message.intro}}</strong> {{message.message}}
+                </div>
+                {{/if}}
+                {{#if isAdmin}}
+                <a href="/GoiTietKiem/Them" class="btn btn-primary text-center btn-custom">Thêm gói</a>
+                {{/if}}
+            </div>
+            <div class="row mt-lg-5 mt-4 ">
+                {{#each goitietkiem}}
+                <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
+                    <div class="grids5-info">
+                        <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="d-block zoom"><img src="/img/goitk.jpg" alt=""
+                                class="img-fluid news-image" /></a>
+                        <h4><a href="/GoiTietKiem/MoGoi/{{this._id}}">{{this.TenGoi}}</a></h4>           
+                        <p>Thời Hạn: 
+                        {{#if this.ThoiHan}}  
+                            {{this.ThoiHan}}</p>
+                        {{else}}
+                            Không thời hạn </p>
+                        {{/if}}
+                        <p class="date"><span class="fa fa-calendar mr-2"></span>Bắt đầu từ:
+                        {{#if this.NgayDienRa}}
+                         {{dateFormat
+                            this.NgayDienRa "DD / MM / YYYY" }}</p>
+                        {{else}}
+                            Không có </p>
+                        {{/if}}
+                        <p class="date"><span class="fa fa-calendar mr-2"></span>Đến ngày: 
+                        {{#if this.NgayKetThuc}}
+                        {{dateFormat this.NgayKetThuc
+                            "DD / MM / YYYY" }}</p>
+                        {{else}}
+                            Không có </p>
+                        {{/if}}
+                        {{#if this.UuDai}}
+                            <p>Ưu đãi: {{this.UuDai}}</p>
+                        {{/if}}
+                        <p>Lãi suất: {{this.LaiSuat}}</p>
+                        <div class="text-center ">
+                            <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="btn btn-primary btn-custom">Mở gói ngay</a>
+                            {{#if ../isAdmin}}
+                            <a href="/GoiTietKiem/Sua/{{this._id}}" class="btn btn-primary btn-custom">Sửa</a>
+                            <a href="/GoiTietKiem/Xoa/{{this._id}}" class="btn btn-primary btn-custom">Xóa</a>
+                            {{/if}}
+                        </div>
+
+                    </div>
+                </div>
+                {{/each}}
+                {{!--
+                <div class="text-center">
+                    <a class="btn btn-style btn-primary mt-sm-5 mt-4" href="#blog">Xem tất cả các gói</a>
+                </div> --}}
+            </div>
+        </div>
+    </section>
+</div>
+
+<section class="w3l-mobile-content-6 py-5" id="bestchoice">
     <div class="mobile-info py-lg-5 py-md-4 py-2">
         <!-- /mobile-info-->
         <div class="container">
-            <h6 class="title-small text-center" Tính năng và lợi ích của việc gửi tiền tiết kiệm online</h6>
-                <h3 class="title-big mb-5 text-center">The Best Choice</h3>
+            <h3 class="title-small text-center">Tính năng và lợi ích của việc gửi tiền tiết kiệm online </h3>
+                <h6 class="title-big mb-5 text-center">The Best Choice</h6>
                 <div class="row mobile-info-inn mx-lg-0">
                     <div class="col-lg-4 mobile-right text-right">
                         <div class="row mobile-right-grids mb-lg-5 mb-4">
@@ -262,56 +329,6 @@
     </div>
 </section>
 
-
-<div class="w3l-news" id="news">
-    <section id="grids5-block" class="py-5">
-        <div class="container py-lg-5 py-md-4 py-2">
-            <h3 class="title-big text-center">Các gói tiết kiệm</h3>
-            <h5 class="text-center">Số lượng gói đang có: {{soluong}}</h5>
-            <div class="text-center">
-                {{#if message}}
-                <div style="text-align: center" class="alert alert-{{message.type}}">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>{{message.intro}}</strong> {{message.message}}
-                </div>
-                {{/if}}
-                {{#if isAdmin}}
-                <a href="/GoiTietKiem/Them" class="btn btn-primary text-center btn-custom">Thêm gói</a>
-                {{/if}}
-            </div>
-            <div class="row mt-lg-5 mt-4 ">
-                {{#each goitietkiem}}
-                <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
-                    <div class="grids5-info">
-                        <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="d-block zoom"><img src="/img/goitk.jpg" alt=""
-                                class="img-fluid news-image" /></a>
-                        <h4><a href="/GoiTietKiem/MoGoi/{{this._id}}">{{this.TenGoi}}</a></h4>
-                        <p>Thời Hạn: {{this.ThoiHan}}</p>
-                        <p class="date"><span class="fa fa-calendar mr-2"></span>Bắt đầu từ: {{dateFormat
-                            this.NgayDienRa "DD / MM / YYYY" }}</p>
-                        <p class="date"><span class="fa fa-calendar mr-2"></span>Đến ngày: {{dateFormat this.NgayKetThuc
-                            "DD / MM / YYYY" }}</p>
-                        <p>Ưu đãi: {{this.UuDai}}</p>
-                        <p>Lãi suất: {{this.LaiSuat}}</p>
-                        <div class="text-center ">
-                            <a href="/GoiTietKiem/MoGoi/{{this._id}}" class="btn btn-primary btn-custom">Mở gói ngay</a>
-                            {{#if ../isAdmin}}
-                            <a href="/GoiTietKiem/Sua/{{this._id}}" class="btn btn-primary btn-custom">Sửa</a>
-                            <a href="/GoiTietKiem/Xoa/{{this._id}}" class="btn btn-primary btn-custom">Xóa</a>
-                            {{/if}}
-                        </div>
-
-                    </div>
-                </div>
-                {{/each}}
-                {{!--
-                <div class="text-center">
-                    <a class="btn btn-style btn-primary mt-sm-5 mt-4" href="#blog">Xem tất cả các gói</a>
-                </div> --}}
-            </div>
-        </div>
-    </section>
-</div>
 
 <!-- //mobile section --->
 <!-- /bottom-grids-->
@@ -455,18 +472,18 @@
     <div class="container py-lg-3">
         <div class="row align-items-center">
             <div class="main-midd col-lg-7 text-lg-right">
-                <h4 class="title-big">Choose Your Bank Card Now!</h4>
+                <h4 class="title-big">Hãy lựa chọn một gói tiết kiệm với lãi suất hấp dẫn ngay nào!</h4>
             </div>
             <div class="col-lg-5 mt-lg-0 mt-4">
-                <a class="btn btn-style btn-dark" href="/Login"> Book a card</a>
+                <a class="btn btn-style btn-dark" href="#cacgoitietkiem">Mở gói</a>
             </div>
         </div>
     </div>
 </section>
 <!-- //forms -->
-<div class="w3l-ordercard py-5">
+<div class="w3l-ordercard py-5" id="guide">
     <div class="container py-lg-5 py-md-4 py-2">
-        <h3 class="title-big mb-5 text-center">How to order a New Card</h3>
+        <h3 class="title-big mb-5 text-center">Các bước để mở một sổ tiết kiệm</h3>
         <div class="row text-center">
             <div class="col-lg-3 col-sm-6">
                 <div class="work-grids">
@@ -519,38 +536,40 @@
 <div class="w3l-news" id="news">
     <section id="grids5-block" class="py-5">
         <div class="container py-lg-5 py-md-4 py-2">
-            <h3 class="title-big text-center">Latest blog posts</h3>
+            <h3 class="title-big text-center">Trang web tham khảo</h3>
             <div class="row mt-lg-5 mt-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="grids5-info">
-                        <a href="https://money.usnews.com/money/personal-finance/banking-credit/articles/2017-05-05/7-banking-services-that-can-save-retirees-money" class="d-block zoom"><img src="/img/blog1.jpg" alt=""
+                        <a href="https://vi.coinmill.com/" class="d-block zoom"><img src="/img/convert-money.jpg" alt=""
                                 class="img-fluid news-image" /></a>
                         <div class="blog-info">
-                            <h4><a href="https://money.usnews.com/money/personal-finance/banking-credit/articles/2017-05-05/7-banking-services-that-can-save-retirees-money">7 Banking services that can save retirees money</a></h4>
-                            <p class="date"><span class="fa fa-calendar mr-2"></span> May 5, 2017</p>
-                            <p>If you’re still banking the way you did 30 years ago, you’re missing out on these services.</p>
+                            <h4><a href="https://vi.coinmill.com/" target="_blank">Tham khảo tỷ giá ngoại tệ</a></h4>
+                            <p class="date"><span class="fa fa-calendar mr-2"></span>Ngày hôm nay</p>
+                            <p>Tham khảo tỷ giá ngoại tệ tại <a href="https://vi.coinmill.com/" target="_blank">coinmill.com</a></p>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 mt-md-0 mt-5">
                     <div class="grids5-info">
-                        <a href="https://www.ncr.com/company/blogs/financial/8-ways-to-drive-adoption-of-your-banking-app" class="d-block zoom"><img src="/img/blog2.jpg" alt=""
+                        <a href="https://news.google.com/covid19/map?hl=vi&mid=%2Fm%2F01crd5&gl=VN&ceid=VN%3Avi" tagret="_blank" class="d-block zoom"><img src="/img/covid.jpg" alt=""
                                 class="img-fluid news-image" /></a>
                         <div class="blog-info">
-                            <h4><a href="https://www.ncr.com/company/blogs/financial/8-ways-to-drive-adoption-of-your-banking-app">8 Ways to Drive Adoption of Your Banking App</a></h4>
-                            <p class="date"><span class="fa fa-calendar mr-2"></span>November 19, 2019</p>
-                            <p>When it comes to digital banking, it’s no secret what customers want. They want convenience. They want an easy-to-use app.</p>
+                            <h4><a href="https://news.google.com/covid19/map?hl=vi&mid=%2Fm%2F01crd5&gl=VN&ceid=VN%3Avi" tagret="_blank">COVID Hôm Nay</a></h4>
+                            <p class="date"><span class="fa fa-calendar mr-2"></span>Ngày hôm nay</p>
+                            <p>Tình hình dịch bệnh COVID-19</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 mt-lg-0 mt-5">
                     <div class="grids5-info">
-                        <a href="https://www.mercycorps.org/blog/look-back-at-2020" class="d-block zoom"><img src="/img/blog3.jpg" alt=""
+                        <a href="https://vnexpress.net/mot-ty-dong-co-nen-gui-tiet-kiem-online-4293687.html" tagret="_blank" class="d-block zoom"><img src="/img/vnexpress.jpg" alt=""
                                 class="img-fluid news-image" /></a>
                         <div class="blog-info">
-                            <h4><a href="https://www.mercycorps.org/blog/look-back-at-2020">A look back at 2020: Challenges, progress and a path forward </a></h4>
-                            <p class="date"><span class="fa fa-calendar mr-2"></span> November 16, 2020</p>
-                            <p>2020 may be coming to an end, but the challenges we faced this year continue — the COVID‑19 pandemic,...</p>
+                            <h4><a href="https://vnexpress.net/mot-ty-dong-co-nen-gui-tiet-kiem-online-4293687.html" tagret="_blank">Một tỷ đồng có nên gửi tiết kiệm online? </a></h4>
+                            <p class="date"><span class="fa fa-calendar mr-2"></span> Thứ hai, 14/6/2021, 01:03 (GMT+7)</p>
+                            <p>Tôi thấy lãi suất gửi online thường cao hơn gửi tại quầy, vậy gửi một tỷ đồng bằng hình thức này có an toàn?
+                                ...<a href="https://vnexpress.net/mot-ty-dong-co-nen-gui-tiet-kiem-online-4293687.html" tagret="_blank">Đọc thêm</a>
+                            </p>
                         </div>
                     </div>
                 </div>
