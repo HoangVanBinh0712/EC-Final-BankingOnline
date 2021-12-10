@@ -51,12 +51,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 //
 const controller = require('./controllers/controller')
 const cron = require('node-cron')
-cron.schedule('0 20 14 * * *', () => {
+cron.schedule('0 50 15 * * *', () => {
 	controller.tangtien()
 	controller.updategoitietkiem()
 	controller.daohan()
 	console.log('Job Done');
 });
+//
 //
 route(app)
 
