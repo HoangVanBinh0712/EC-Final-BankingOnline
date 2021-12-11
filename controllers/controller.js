@@ -1006,7 +1006,6 @@ class Controller {
             const hashedPassword = await argon2.hash(password)
             const newUser = new User({ username, password: hashedPassword })
             await newUser.save()
-            console.log(error)
             res.clearCookie(process.env.NAME_TOKEN_SECRET);
             req.session.message = {
                 type: 'danger',
