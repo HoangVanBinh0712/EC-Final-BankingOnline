@@ -1,28 +1,62 @@
 <div class="khongduocxoa"></div>
-<form method="post" action="/TaiKhoan/ChuyenTien">
-    <div class="form-group">
-        <label for="exampleInputEmail1">Số Tài Khoản: {{taikhoan.STK}}</label>
+<div class="w3l-news" id="news">
+  <section id="grids5-block" class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="grids5-info">
+            <form method="post" action="/TaiKhoan/ChuyenTien">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Số Tài Khoản:
+                  {{taikhoan.STK}}</label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Số Dư: {{taikhoan.SoDu}}</label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Số tài khoản người nhận:
+                </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="STKNhan"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Nhập số tiền muốn chuyển:
+                </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="SoTienChuyen"
+                  max="{{taikhoan.SoDu}}"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Nội dung: </label>
+                <input type="text" class="form-control" name="NoiDung" />
+              </div>
+              <button type="submit" class="btn btn-primary">Chuyển Ngay !</button>
+            </form>
+            {{#if message}}
+              <div
+                style="text-align: center"
+                class="alert alert-{{message.type}}"
+              >
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="alert"
+                >&times;</button>
+                <strong>{{message.intro}}</strong>
+                {{message.message}}
+              </div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Số Dư: {{taikhoan.SoDu}}</label>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Số tài khoản người nhận: </label>
-        <input type="number" class="form-control" name="STKNhan" required>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Nhập số tiền muốn chuyển: </label>
-        <input type="number" class="form-control" name="SoTienChuyen" max="{{taikhoan.SoDu}}" required>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Nội dung: </label>
-        <input type="text" class="form-control" name="NoiDung">
-    </div>
-    <button type="submit" class="btn btn-primary">Chuyển Ngay !</button>
-</form>
-{{#if message}}
-<div style="text-align: center" class="alert alert-{{message.type}}">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <strong>{{message.intro}}</strong> {{message.message}}
+  </section>
 </div>
-{{/if}}
