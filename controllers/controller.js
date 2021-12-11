@@ -1284,6 +1284,17 @@ class Controller {
                 }
                 return res.redirect('/TaiKhoan/ChuyenTien')
             }
+            const current = await TaiKhoan.findOne({user: req.userId})
+            if(taikhoan.STK == current.STK)
+            {
+                 //message
+                 req.session.message = {
+                    type: 'danger',
+                    intro: 'Không thể chuyển cho chính mình ! ',
+                    message: ''
+                }
+                return res.redirect('/TaiKhoan/ChuyenTien')
+            }
             //all good
             const NguoiChuyen = taikhoangui.STK
             const NguoiNhan = taikhoan.STK
