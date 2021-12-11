@@ -552,9 +552,9 @@ class Controller {
             )
             username = username + ' '
             res.cookie('authjwt', username + accessToken + ' ' + user.role, {
-                expires: new Date(Date.now() + 8 * 3600000) // cookie will be removed after 8 hours
+                expires: new Date(Date.now() + 600000) // cookie will be removed after 10m
             })
-            res.redirect('/')
+            res.redirect('back')
         } catch (error) {
             console.log(error)
             res.clearCookie(process.env.NAME_TOKEN_SECRET);
