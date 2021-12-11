@@ -25,8 +25,10 @@
     "fs": "^0.0.1-security",
     "handlebars-dateformat": "^1.1.1",
     "jsonwebtoken": "^8.5.1",
+    "l": "^0.6.0",
     "mongoose": "^6.0.12",
     "node-cron": "^3.0.0",
+    "node-schedule": "^2.1.0",
     "path": "^0.12.7",
     "paypal-rest-sdk": "^1.8.1",
     "req-flash": "^0.0.3"

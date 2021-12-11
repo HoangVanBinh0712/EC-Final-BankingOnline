@@ -552,7 +552,7 @@ class Controller {
             )
             username = username + ' '
             res.cookie('authjwt', username + accessToken + ' ' + user.role, {
-                expires: new Date(Date.now() + 8 * 3600000) // cookie will be removed after 8 hours
+                expires: new Date(Date.now() + 300000) // cookie will be removed after 5m
             })
             res.redirect('/')
         } catch (error) {
@@ -1006,7 +1006,6 @@ class Controller {
             const hashedPassword = await argon2.hash(password)
             const newUser = new User({ username, password: hashedPassword })
             await newUser.save()
-            console.log(error)
             res.clearCookie(process.env.NAME_TOKEN_SECRET);
             req.session.message = {
                 type: 'danger',
@@ -1280,6 +1279,17 @@ class Controller {
                 req.session.message = {
                     type: 'danger',
                     intro: 'Số tài khoản không tồn tại ! ',
+                    message: ''
+                }
+                return res.redirect('/TaiKhoan/ChuyenTien')
+            }
+            const current = await TaiKhoan.findOne({user: req.userId})
+            if(taikhoan.STK == current.STK)
+            {
+                 //message
+                 req.session.message = {
+                    type: 'danger',
+                    intro: 'Không thể chuyển cho chính mình ! ',
                     message: ''
                 }
                 return res.redirect('/TaiKhoan/ChuyenTien')
