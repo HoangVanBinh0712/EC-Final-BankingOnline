@@ -4,6 +4,9 @@
 <img src='https://www.technoscore.com/images/services/node-js-icon.png' width="48" height="42"/>
 <img src='https://cdn.iconscout.com/icon/free/png-256/mongodb-3-1175138.png' width="48" height="42"/>
 <img src='https://logos-download.com/wp-content/uploads/2016/03/PayPal_Logo_2014.png' width="48" height="42"/>
+<img src='https://tse3.mm.bing.net/th?id=OIP.pqcPskVdTrJqfhZ-Z49AtQHaHn&pid=Api&P=0&w=175&h=180' width="48" height="42"/>
+<img src='https://cdn.freebiesupply.com/logos/large/2x/css-3-logo-png-transparent.png' width="48" height="42"/>
+<img src='https://www.nicepng.com/png/detail/141-1415492_bootstrap-bootstrap-4-icon-png.png' width="48" height="42"/>
 </h1>
 </div>
 
@@ -31,6 +34,9 @@ Banking Online Website allows users to deposit money into different savings pack
 <img src='https://www.technoscore.com/images/services/node-js-icon.png' width="48" height="42"/>
 <img src='https://cdn.iconscout.com/icon/free/png-256/mongodb-3-1175138.png' width="48" height="42"/>
 <img src='https://logos-download.com/wp-content/uploads/2016/03/PayPal_Logo_2014.png' width="48" height="42"/>
+<img src='https://tse3.mm.bing.net/th?id=OIP.pqcPskVdTrJqfhZ-Z49AtQHaHn&pid=Api&P=0&w=175&h=180' width="48" height="42"/>
+<img src='https://cdn.freebiesupply.com/logos/large/2x/css-3-logo-png-transparent.png' width="48" height="42"/>
+<img src='https://www.nicepng.com/png/detail/141-1415492_bootstrap-bootstrap-4-icon-png.png' width="48" height="42"/>
 </h1>
 </div>
 <h2>Mô tả</h2>
