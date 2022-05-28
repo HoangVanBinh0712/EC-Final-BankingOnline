@@ -27,7 +27,7 @@ app.use(flash());
 const connectDB = async () => {
 	try {
 		await mongoose.connect(
-			`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@mern-learnit.qyd2w.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
+			`mongodb+srv://henrywebdev:1234@mern-learnit.qyd2w.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
 			{
 				useNewUrlParser: true,
 				useUnifiedTopology: true,
