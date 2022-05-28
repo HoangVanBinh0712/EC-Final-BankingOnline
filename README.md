@@ -8,7 +8,7 @@
 </div>
 
 <h2>Description</h2>
-Website gửi tiết kiệm giúp người dùng có thể gửi tiền trong tài khoản vào các gói tiết kiệm khác nhau. Mỗi gói tiết kiệm có mức lãi suất và thời hạn gửi tiết kiệm khác nhau, người dùng có thể lựa chọn các gói tiết kiệm để gửi tiền vào.
+Banking Online Website allows users to deposit money into different savings packages. Each savings package has a different interest rate and savings term, users can choose savings packages to deposit their money.
 <hr>
 <h2>Tools and FrameWorks </h2>
 <li> Vscode </li>
